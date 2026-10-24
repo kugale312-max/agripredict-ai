@@ -1,0 +1,15 @@
+kaggle.json
+.env
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+data/
+reports/
+models/variants/
+models/*.png
+*.zip
+
+# Ensure production model artifacts are tracked
+!models/best_model.joblib
+!models/metadata.json

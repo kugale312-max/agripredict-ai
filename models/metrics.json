@@ -1,0 +1,74 @@
+{
+  "evaluation_notes": {
+    "time_based_split": "Trained on 1997-2012, tested on 2013-2015. More honest metric for prospective yield forecasting.",
+    "random_split": "Random 80/20 train/test split. Exhibits higher scores due to temporal shared variance."
+  },
+  "models": [
+    {
+      "model": "Naive Mean Baseline",
+      "time_based_r2": 0.8919,
+      "time_based_r2_log": 0.8691,
+      "time_based_mae": 0.9893,
+      "time_based_rmse": 2.749,
+      "random_split_r2": 0.8759,
+      "random_split_r2_log": 0.8052,
+      "random_split_mae": 0.7365,
+      "random_split_rmse": 2.0752
+    },
+    {
+      "model": "Linear Regression",
+      "time_based_r2": 0.8508,
+      "time_based_r2_log": 0.8602,
+      "time_based_mae": 1.0998,
+      "time_based_rmse": 3.2296,
+      "random_split_r2": 0.8557,
+      "random_split_r2_log": 0.8068,
+      "random_split_mae": 0.7649,
+      "random_split_rmse": 2.2375
+    },
+    {
+      "model": "Decision Tree",
+      "time_based_r2": 0.8625,
+      "time_based_r2_log": 0.8287,
+      "time_based_mae": 0.9859,
+      "time_based_rmse": 3.0996,
+      "random_split_r2": 0.9432,
+      "random_split_r2_log": 0.807,
+      "random_split_mae": 0.5738,
+      "random_split_rmse": 1.4042
+    },
+    {
+      "model": "Random Forest",
+      "time_based_r2": 0.8397,
+      "time_based_r2_log": 0.8506,
+      "time_based_mae": 0.9238,
+      "time_based_rmse": 3.3476,
+      "random_split_r2": 0.9576,
+      "random_split_r2_log": 0.8489,
+      "random_split_mae": 0.4977,
+      "random_split_rmse": 1.2129
+    },
+    {
+      "model": "HistGradientBoosting",
+      "time_based_r2": 0.8928,
+      "time_based_r2_log": 0.9004,
+      "time_based_mae": 0.8603,
+      "time_based_rmse": 2.737,
+      "random_split_r2": 0.9366,
+      "random_split_r2_log": 0.8922,
+      "random_split_mae": 0.5224,
+      "random_split_rmse": 1.4836
+    },
+    {
+      "model": "XGBoost",
+      "time_based_r2": 0.8096,
+      "time_based_r2_log": 0.8852,
+      "time_based_mae": 0.9643,
+      "time_based_rmse": 3.648,
+      "random_split_r2": 0.9388,
+      "random_split_r2_log": 0.8756,
+      "random_split_mae": 0.5564,
+      "random_split_rmse": 1.4569
+    }
+  ]
+}

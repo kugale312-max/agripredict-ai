@@ -1,0 +1,364 @@
+{
+  "project": "AgriPredict AI",
+  "description": "Metadata specification for frontend form validation, parameter ranges, and API model serving.",
+  "valid_crops": [
+    "Arhar/Tur",
+    "Bajra",
+    "Banana",
+    "Barley",
+    "Castor seed",
+    "Coriander",
+    "Cowpea(Lobia)",
+    "Dry chillies",
+    "Dry ginger",
+    "Garlic",
+    "Gram",
+    "Groundnut",
+    "Guar seed",
+    "Horse-gram",
+    "Jowar",
+    "Khesari",
+    "Linseed",
+    "Maize",
+    "Masoor",
+    "Moong(Green Gram)",
+    "Moth",
+    "Niger seed",
+    "Onion",
+    "Peas & beans (Pulses)",
+    "Potato",
+    "Ragi",
+    "Rapeseed &Mustard",
+    "Rice",
+    "Safflower",
+    "Sesamum",
+    "Small millets",
+    "Soyabean",
+    "Sugarcane",
+    "Sunflower",
+    "Sweet potato",
+    "Tapioca",
+    "Tobacco",
+    "Turmeric",
+    "Urad",
+    "Wheat"
+  ],
+  "valid_seasons": [
+    "Kharif",
+    "Rabi",
+    "Zaid"
+  ],
+  "valid_soil_types": [
+    "Alluvial",
+    "Black",
+    "Loamy",
+    "Red",
+    "Sandy"
+  ],
+  "valid_crop_seasons": {
+    "Arhar/Tur": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Bajra": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Banana": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Barley": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Castor seed": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Coriander": [
+      "Rabi"
+    ],
+    "Cowpea(Lobia)": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Dry chillies": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Dry ginger": [
+      "Kharif"
+    ],
+    "Garlic": [
+      "Rabi"
+    ],
+    "Gram": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Groundnut": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Guar seed": [
+      "Kharif"
+    ],
+    "Horse-gram": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Jowar": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Khesari": [
+      "Rabi"
+    ],
+    "Linseed": [
+      "Rabi"
+    ],
+    "Maize": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Masoor": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Moong(Green Gram)": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Moth": [
+      "Kharif"
+    ],
+    "Niger seed": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Onion": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Peas & beans (Pulses)": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Potato": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Ragi": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Rapeseed &Mustard": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Rice": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Safflower": [
+      "Rabi"
+    ],
+    "Sesamum": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Small millets": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Soyabean": [
+      "Kharif"
+    ],
+    "Sugarcane": [
+      "Kharif"
+    ],
+    "Sunflower": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Sweet potato": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Tapioca": [
+      "Kharif"
+    ],
+    "Tobacco": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Turmeric": [
+      "Kharif",
+      "Rabi"
+    ],
+    "Urad": [
+      "Kharif",
+      "Rabi",
+      "Zaid"
+    ],
+    "Wheat": [
+      "Rabi",
+      "Zaid"
+    ]
+  },
+  "input_ranges": {
+    "Rainfall_mm": {
+      "p01": 4.51,
+      "p99": 1754.85,
+      "min": 0.0,
+      "max": 3243.81,
+      "mean": 483.03,
+      "median": 355.37
+    },
+    "Temperature_C": {
+      "p01": 11.96,
+      "p99": 32.39,
+      "min": -13.25,
+      "max": 33.42,
+      "mean": 24.83,
+      "median": 25.61
+    },
+    "Area_ha": {
+      "p01": 1.0,
+      "p99": 197651.58,
+      "min": 0.1,
+      "max": 1020181.0,
+      "mean": 13711.6,
+      "median": 889.0
+    }
+  },
+  "average_yield_per_crop_season": {
+    "Arhar/Tur__Kharif": 0.7814,
+    "Arhar/Tur__Rabi": 0.8424,
+    "Bajra__Kharif": 1.0715,
+    "Bajra__Rabi": 1.2409,
+    "Bajra__Zaid": 2.1023,
+    "Banana__Kharif": 19.7344,
+    "Banana__Rabi": 13.8811,
+    "Banana__Zaid": 41.3514,
+    "Barley__Kharif": 1.7467,
+    "Barley__Rabi": 1.8157,
+    "Castor seed__Kharif": 0.686,
+    "Castor seed__Rabi": 0.5388,
+    "Coriander__Rabi": 0.5388,
+    "Cowpea(Lobia)__Kharif": 0.4506,
+    "Cowpea(Lobia)__Rabi": 0.52,
+    "Cowpea(Lobia)__Zaid": 0.379,
+    "Dry chillies__Kharif": 1.447,
+    "Dry chillies__Rabi": 2.1303,
+    "Dry chillies__Zaid": 2.9617,
+    "Dry ginger__Kharif": 4.1404,
+    "Garlic__Rabi": 4.6491,
+    "Gram__Kharif": 0.5244,
+    "Gram__Rabi": 0.8255,
+    "Groundnut__Kharif": 1.042,
+    "Groundnut__Rabi": 1.455,
+    "Groundnut__Zaid": 1.4389,
+    "Guar seed__Kharif": 0.838,
+    "Horse-gram__Kharif": 0.4953,
+    "Horse-gram__Rabi": 0.4139,
+    "Horse-gram__Zaid": 0.2537,
+    "Jowar__Kharif": 0.9987,
+    "Jowar__Rabi": 0.944,
+    "Jowar__Zaid": 1.8911,
+    "Khesari__Rabi": 0.7793,
+    "Linseed__Rabi": 0.5093,
+    "Maize__Kharif": 1.766,
+    "Maize__Rabi": 2.8602,
+    "Maize__Zaid": 2.2639,
+    "Masoor__Kharif": 0.4781,
+    "Masoor__Rabi": 0.6951,
+    "Moong(Green Gram)__Kharif": 0.4262,
+    "Moong(Green Gram)__Rabi": 0.4374,
+    "Moong(Green Gram)__Zaid": 0.5558,
+    "Moth__Kharif": 0.3701,
+    "Niger seed__Kharif": 0.336,
+    "Niger seed__Rabi": 0.3691,
+    "Onion__Kharif": 10.0166,
+    "Onion__Rabi": 15.5932,
+    "Onion__Zaid": 11.3319,
+    "Peas & beans (Pulses)__Kharif": 2.0463,
+    "Peas & beans (Pulses)__Rabi": 1.0185,
+    "Peas & beans (Pulses)__Zaid": 6.4538,
+    "Potato__Kharif": 8.6415,
+    "Potato__Rabi": 16.3735,
+    "Potato__Zaid": 14.5882,
+    "Ragi__Kharif": 1.1168,
+    "Ragi__Rabi": 1.5816,
+    "Ragi__Zaid": 1.4769,
+    "Rapeseed &Mustard__Kharif": 0.3345,
+    "Rapeseed &Mustard__Rabi": 0.7915,
+    "Rice__Kharif": 1.9586,
+    "Rice__Rabi": 2.6178,
+    "Rice__Zaid": 2.2944,
+    "Safflower__Rabi": 0.5338,
+    "Sesamum__Kharif": 0.3751,
+    "Sesamum__Rabi": 0.3271,
+    "Sesamum__Zaid": 0.4467,
+    "Small millets__Kharif": 0.6164,
+    "Small millets__Rabi": 0.7454,
+    "Soyabean__Kharif": 1.0152,
+    "Sugarcane__Kharif": 55.7603,
+    "Sunflower__Kharif": 0.8185,
+    "Sunflower__Rabi": 0.851,
+    "Sunflower__Zaid": 1.1761,
+    "Sweet potato__Kharif": 11.8181,
+    "Sweet potato__Rabi": 6.6802,
+    "Tapioca__Kharif": 12.4858,
+    "Tobacco__Kharif": 1.195,
+    "Tobacco__Rabi": 3.4797,
+    "Tobacco__Zaid": 3.0508,
+    "Turmeric__Kharif": 3.2314,
+    "Turmeric__Rabi": 3.0776,
+    "Urad__Kharif": 0.4958,
+    "Urad__Rabi": 0.4934,
+    "Urad__Zaid": 0.5311,
+    "Wheat__Rabi": 2.0942,
+    "Wheat__Zaid": 1.3505
+  },
+  "best_model": {
+    "architecture": "HistGradientBoosting",
+    "hyperparameters": {
+      "regressor__regressor__min_samples_leaf": 40,
+      "regressor__regressor__max_iter": 150,
+      "regressor__regressor__max_depth": null,
+      "regressor__regressor__learning_rate": 0.08
+    },
+    "cv_score_r2_log": 0.8873,
+    "time_based_metrics": {
+      "R2": 0.8935,
+      "R2_log": 0.8989,
+      "MAE": 0.8661,
+      "RMSE": 2.7276
+    },
+    "random_split_metrics": {
+      "R2": 0.9261,
+      "R2_log": 0.8929,
+      "MAE": 0.5298,
+      "RMSE": 1.601
+    }
+  }
+}

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriPredict AI — Crop Yield Prediction</title>
+  <meta name="description" content="Estimate crop yield using crop and weather data. Explore a clearer picture of your growing season with this academic AIML project.">
+
+  <!-- Google Fonts: Fraunces (serif) & DM Sans (sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600&display=swap" rel="stylesheet">
+
+  <!-- Chart.js via cdnjs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+  <!-- 1. NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#top" class="brand" aria-label="AgriPredict AI Home">
+        <div class="logo-tile">
+          <!-- Seedling / Sprout SVG -->
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 21V10" />
+            <path d="M12 10C8.5 10 5.5 7.5 5.5 3C9.5 3 12 5.5 12 10Z" fill="currentColor" fill-opacity="0.15" />
+            <path d="M12 14C15.5 14 18.5 12 18.5 8C14.5 8 12 10 12 14Z" fill="currentColor" fill-opacity="0.15" />
+            <path d="M6 21h12" />
+          </svg>
+        </div>
+        <span class="brand-name">AgriPredict AI</span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#top" class="nav-link active" id="nav-dashboard">Dashboard</a>
+        <a href="#estimator" class="nav-link" id="nav-predict">Predict Yield</a>
+        <a href="#insights" class="nav-link" id="nav-insights">Insights</a>
+        <a href="#about" class="nav-link" id="nav-about">About</a>
+      </nav>
+
+      <!-- Hamburger Button (Mobile) -->
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false">
+        <svg class="icon-hamburger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#top" class="mobile-nav-link active">Dashboard</a>
+      <a href="#estimator" class="mobile-nav-link">Predict Yield</a>
+      <a href="#insights" class="mobile-nav-link">Insights</a>
+      <a href="#about" class="mobile-nav-link">About</a>
+    </div>
+  </header>
+
+  <!-- MAIN PAGE WRAPPER (Max-width 1230px, centered) -->
+  <main class="main-wrapper">
+
+    <!-- 2. HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <div class="hero-left">
+        <div class="pill-badge mint-pill">
+          <span>AGRICULTURE × INTELLIGENCE</span>
+        </div>
+        <h1 class="hero-title">Predict smarter.<br>Grow better.</h1>
+        <p class="hero-paragraph">
+          Estimate crop yield using crop and weather data. Explore a clearer picture of your growing season with this academic AIML project.
+        </p>
+        <div class="hero-actions">
+          <a href="#estimator" class="btn btn-primary" id="heroPredictBtn">Predict Crop Yield</a>
+          <a href="#insights" class="btn btn-outline" id="heroExploreBtn">Explore Insights</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-image-card">
+          <img 
+            src="assets/hero-harvest.jpg" 
+            alt="Aerial view of harvest field with combine harvester and tractor" 
+            class="hero-img"
+            onerror="this.src='https://images.unsplash.com/photo-1721545708421-0d9f01114f18?auto=format&fit=crop&w=1200&q=80'"
+          />
+          
+          <!-- Floating Yield Card on Hero Image -->
+          <div class="floating-yield-card" id="floatingYieldCard">
+            <div class="floating-yield-header">
+              <div class="icon-tile-small mint-tile">
+                <!-- Trending Up / Chart Icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </div>
+              <span class="floating-yield-label">Estimated yield</span>
+            </div>
+            <div class="floating-yield-value" id="heroYieldValue">—</div>
+            <div class="floating-yield-caption" id="heroYieldCaption">Awaiting prediction</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. FEATURE STRIP (3 equal cards in a row) -->
+    <section class="feature-strip" aria-label="Key features">
+      <!-- Feature 1: Weather Data -->
+      <div class="feature-card">
+        <div class="feature-icon-tile mint-tile">
+          <!-- Cloud-Sun Icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="M20 12h2"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+            <path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"></path>
+            <path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"></path>
+          </svg>
+        </div>
+        <div class="feature-text">
+          <h3 class="feature-title">Weather Data</h3>
+          <p class="feature-subtitle">Live-ready inputs</p>
+        </div>
+      </div>
+
+      <!-- Feature 2: Crop Insights -->
+      <div class="feature-card">
+        <div class="feature-icon-tile mint-tile">
+          <!-- Wheat / Sprout Leaf Icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 22 16 8"></path>
+            <path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"></path>
+            <path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"></path>
+            <path d="M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z"></path>
+            <path d="M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z"></path>
+            <path d="M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z"></path>
+          </svg>
+        </div>
+        <div class="feature-text">
+          <h3 class="feature-title">Crop Insights</h3>
+          <p class="feature-subtitle">Seasonal patterns</p>
+        </div>
+      </div>
+
+      <!-- Feature 3: AI Model -->
+      <div class="feature-card">
+        <div class="feature-icon-tile sand-tile">
+          <!-- Brain / ML Icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"></path>
+            <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"></path>
+            <path d="M12 5v13"></path>
+            <path d="M8 8h1"></path>
+            <path d="M15 8h1"></path>
+            <path d="M7 13h1"></path>
+            <path d="M16 13h1"></path>
+          </svg>
+        </div>
+        <div class="feature-text">
+          <h3 class="feature-title">AI Model</h3>
+          <p class="feature-subtitle">ML-powered estimate</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. MAIN GRID (Two columns: Estimator & Seasonal Trends) -->
+    <div class="main-grid">
+
+      <!-- LEFT CARD: Yield Estimator -->
+      <section class="content-card estimator-card" id="estimator" aria-labelledby="estimator-heading">
+        <div class="card-header">
+          <span class="eyebrow-label">YIELD ESTIMATOR</span>
+          <h2 class="card-title" id="estimator-heading">Plan with a little more clarity.</h2>
+          <p class="card-subtitle">Enter growing conditions to see an illustrative yield estimate.</p>
+        </div>
+
+        <form id="yieldForm" class="estimator-form" novalidate>
+          <!-- Server & Form Error Banners -->
+          <div id="serverErrorBanner" style="display: none; background-color: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 16px; border-radius: 12px; font-size: 13.5px; font-weight: 500; margin-bottom: 18px; line-height: 1.4;">
+            Cannot reach the prediction server. Start the backend and try again. <a href="#" id="retryNowLink" style="color: #991B1B; font-weight: 600; text-decoration: underline; margin-left: 8px; cursor: pointer;">Retry now</a>
+          </div>
+          <div id="formErrorBanner" style="display: none; background-color: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 16px; border-radius: 12px; font-size: 13.5px; font-weight: 500; margin-bottom: 18px; line-height: 1.4;"></div>
+
+          <div class="form-grid">
+            
+            <!-- Crop Type -->
+            <div class="form-group" id="group-crop">
+              <label for="cropSelect" class="form-label">Crop Type</label>
+              <div class="select-wrapper">
+                <select id="cropSelect" name="crop" class="form-control" required>
+                  <option value="" disabled selected>Loading crops...</option>
+                </select>
+                <div class="select-chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <span class="error-message" id="error-crop">Please select a crop type</span>
+            </div>
+
+            <!-- Season -->
+            <div class="form-group" id="group-season">
+              <label for="seasonSelect" class="form-label">Season</label>
+              <div class="select-wrapper">
+                <select id="seasonSelect" name="season" class="form-control" required>
+                  <option value="" disabled selected>Select season</option>
+                  <option value="Kharif">Kharif</option>
+                  <option value="Rabi">Rabi</option>
+                  <option value="Zaid">Zaid</option>
+                </select>
+                <div class="select-chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <span class="error-message" id="error-season">Please select a season</span>
+            </div>
+
+            <!-- Rainfall (mm) -->
+            <div class="form-group" id="group-rainfall">
+              <label for="rainfallInput" class="form-label">Rainfall (mm)</label>
+              <input 
+                type="number" 
+                id="rainfallInput" 
+                name="rainfall" 
+                class="form-control" 
+                placeholder="e.g. 700" 
+                min="0" 
+                max="5000" 
+                step="any"
+                required
+              />
+              <span class="field-hint" id="hint-rainfall" style="font-size: 11.5px; color: var(--muted); margin-top: 4px; display: block;"></span>
+              <span class="error-message" id="error-rainfall">Enter rainfall in mm</span>
+            </div>
+
+            <!-- Temperature (°C) -->
+            <div class="form-group" id="group-temperature">
+              <label for="tempInput" class="form-label">Temperature (°C)</label>
+              <input 
+                type="number" 
+                id="tempInput" 
+                name="temperature" 
+                class="form-control" 
+                placeholder="e.g. 27" 
+                min="-10" 
+                max="60" 
+                step="any"
+                required
+              />
+              <span class="field-hint" id="hint-temperature" style="font-size: 11.5px; color: var(--muted); margin-top: 4px; display: block;"></span>
+              <span class="error-message" id="error-temperature">Enter temperature in °C</span>
+            </div>
+
+            <!-- Soil Type -->
+            <div class="form-group" id="group-soil">
+              <label for="soilSelect" class="form-label">Soil Type</label>
+              <div class="select-wrapper">
+                <select id="soilSelect" name="soil" class="form-control" required>
+                  <option value="" disabled selected>Loading soil types...</option>
+                </select>
+                <div class="select-chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <span class="error-message" id="error-soil">Please select soil type</span>
+            </div>
+
+            <!-- Area (hectares) -->
+            <div class="form-group" id="group-area">
+              <label for="areaInput" class="form-label">Area (hectares)</label>
+              <input 
+                type="number" 
+                id="areaInput" 
+                name="area" 
+                class="form-control" 
+                placeholder="e.g. 2.5" 
+                min="0.01" 
+                max="100000" 
+                step="any"
+                required
+              />
+              <span class="field-hint" id="hint-area" style="font-size: 11.5px; color: var(--muted); margin-top: 4px; display: block;"></span>
+              <span class="error-message" id="error-area">Enter farm area in hectares</span>
+            </div>
+
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-predict" id="predictBtn">
+            <span class="btn-text">Predict Yield</span>
+            <span class="btn-spinner" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+                <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <!-- Prediction Result Panel (Hidden by default, smooth animated reveal) -->
+        <div class="prediction-result" id="predictionResult" aria-live="polite">
+          <div class="result-badge-row">
+            <div class="result-status-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Prediction Complete</span>
+            </div>
+            <span class="result-crop-tag" id="resultCropTag">Rice • Kharif</span>
+          </div>
+
+          <div class="result-metrics-grid">
+            <div class="result-metric-card">
+              <div class="metric-label">Estimated Yield</div>
+              <div class="metric-value-huge" id="resultYieldValue">4.80 <span class="metric-unit">t/ha</span></div>
+              <div class="metric-note">Tonnes per hectare</div>
+            </div>
+
+            <div class="result-metric-card">
+              <div class="metric-label">Total Production</div>
+              <div class="metric-value-huge" id="resultProductionValue">12.00 <span class="metric-unit">tonnes</span></div>
+              <div class="metric-note" id="resultAreaNote">Across 2.5 hectares</div>
+            </div>
+          </div>
+
+          <div class="result-analysis-bar" id="resultAnalysisBar">
+            <div class="analysis-indicator"></div>
+            <div class="analysis-text" id="resultAnalysisText">
+              Favorable rainfall and temperature match for optimal crop productivity.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT CARD: Yield trends by season -->
+      <section class="content-card insights-card" id="insights" aria-labelledby="insights-heading">
+        <div class="card-header-row">
+          <div>
+            <span class="eyebrow-label">SEASONAL PERSPECTIVE</span>
+            <h2 class="card-title" id="insights-heading">Yield trends by season</h2>
+          </div>
+          <div class="pill-badge sand-pill" id="chartDataBadge">
+            <span id="chartDataBadgeText">Illustrative data</span>
+          </div>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="chart-wrapper">
+          <canvas id="seasonalChart" aria-label="Line chart comparing seasonal crop yield across Kharif, Rabi, and Zaid seasons" role="img"></canvas>
+        </div>
+
+        <!-- Chart Legend Row -->
+        <div class="chart-legend-row">
+          <span class="legend-dot"></span>
+          <span class="legend-text" id="chartLegendText">Historical yield · tonnes per hectare</span>
+        </div>
+
+        <!-- Highlight Box (Cream-tinted, rounded) -->
+        <div class="highlight-box" id="highlightBox">
+          <div class="highlight-icon">
+            <!-- Sparkle / Star Icon in Gold -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+            </svg>
+          </div>
+          <div class="highlight-content">
+            <div class="highlight-title" id="highlightTitle">Best outlook: Kharif season</div>
+            <div class="highlight-desc" id="highlightDesc">An illustrative seasonal comparison, not a forecast.</div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- ABOUT SECTION (Anchor for navigation & academic project info) -->
+    <section class="about-section" id="about" aria-label="About AgriPredict AI">
+      <div class="about-card">
+        <div class="about-header">
+          <div class="icon-tile-small mint-tile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
+          <h3 class="about-title">About AgriPredict AI</h3>
+        </div>
+        <p class="about-desc">
+          AgriPredict AI is an academic Artificial Intelligence and Machine Learning (AIML) mini project demonstrating yield estimation through agronomic parameters including crop variety, seasonal factors, rainfall, temperature, and soil characteristics.
+        </p>
+        <div class="about-meta">
+          <span class="meta-tag">AIML Mini Project</span>
+          <span class="meta-tag">Random Forest & Regressor Architecture</span>
+          <span class="meta-tag">REST API Ready</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 5. FOOTER -->
+  <footer class="footer">
+    <p class="footer-text">Academic Mini Project • AIML</p>
+    <p class="footer-text" id="footerMetrics" style="margin-top: 6px; font-size: 12.5px; opacity: 0.85;"></p>
+  </footer>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>
