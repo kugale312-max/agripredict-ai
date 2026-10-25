@@ -1,19 +1,14 @@
 """
 backend/app.py
 ==============
-Flask REST API for AgriPredict AI Model Serving.
+Flask REST API for AgriPredict AI Model Serving (Variant C: State-Aware).
 
-Provides RESTful endpoints for:
-- Health check (/health)
-- Dynamic options & input ranges (/options)
-- Crop seasonal yield trends (/trends)
-- Model performance metrics (/metrics)
-- Yield prediction with strict validation (/predict)
-
-Integrates:
-- Flask and Flask-CORS for cross-origin access
-- Pre-trained best_model.joblib and metadata.json loaded once at startup
-- TransformedTargetRegressor inference with negative-yield safeguards
+Endpoints:
+  - GET  /health   -> Health check status
+  - GET  /options  -> States, valid_combos (State -> Crop -> Seasons), typical_weather, hard_limits
+  - GET  /trends   -> Historical average yield per valid season for (Crop, State) or national average
+  - GET  /metrics  -> Rolling-window temporal validation metrics from metadata.json
+  - POST /predict  -> Predicts crop yield (t/ha) and total production (tonnes) with validation & warnings
 """
 
 import json
@@ -22,7 +17,6 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
-# Suppress loky CPU core warnings on Windows
 os.environ["LOKY_MAX_CPU_COUNT"] = str(os.cpu_count() or 4)
 
 import joblib
@@ -31,127 +25,95 @@ import pandas as pd
 from flask import Flask, abort, jsonify, request, send_from_directory
 from flask_cors import CORS
 
-# File paths built strictly from file location
+# File paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODELS_DIR = BASE_DIR / "models"
 MODEL_PATH = MODELS_DIR / "best_model.joblib"
 METADATA_PATH = MODELS_DIR / "metadata.json"
 PUBLIC_DIR = BASE_DIR / "public"
 
-# Initialize Flask application
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
-# Global containers for artifacts loaded once at startup
+# Global containers
 MODEL = None
-METADATA = None
-EXPECTED_FEATURES = []
-MODEL_NAME = "HistGradientBoosting"
+METADATA: Dict[str, Any] = {}
+EXPECTED_FEATURES: List[str] = []
+MODEL_NAME = "HistGradientBoostingRegressor (State-Aware)"
 
 
 def load_artifacts():
-    """
-    Loads best_model.joblib and metadata.json once at application startup.
-    Raises clear, descriptive FileNotFoundError if any artifact is missing.
-    """
     global MODEL, METADATA, EXPECTED_FEATURES, MODEL_NAME
 
     if not MODEL_PATH.exists():
-        raise FileNotFoundError(
-            f"Production model file missing: '{MODEL_PATH}'. "
-            "Please run 'backend/train_model.py' to generate Stage 2 model artifacts before starting the API."
-        )
+        raise FileNotFoundError(f"Model file missing: '{MODEL_PATH}'. Run backend/train_final.py first.")
 
     if not METADATA_PATH.exists():
-        raise FileNotFoundError(
-            f"Metadata specification file missing: '{METADATA_PATH}'. "
-            "Please ensure Stage 2 model training completed successfully."
-        )
+        raise FileNotFoundError(f"Metadata file missing: '{METADATA_PATH}'. Run backend/train_final.py first.")
 
     try:
         MODEL = joblib.load(MODEL_PATH)
     except Exception as e:
-        raise RuntimeError(f"Failed to deserialize model artifact from '{MODEL_PATH}': {e}") from e
+        raise RuntimeError(f"Failed to load model from '{MODEL_PATH}': {e}") from e
 
     try:
         with open(METADATA_PATH, "r", encoding="utf-8") as f:
             METADATA = json.load(f)
     except Exception as e:
-        raise RuntimeError(f"Failed to parse metadata JSON from '{METADATA_PATH}': {e}") from e
+        raise RuntimeError(f"Failed to load metadata from '{METADATA_PATH}': {e}") from e
 
-    # Determine input feature schema expected by the trained pipeline
     if hasattr(MODEL, "feature_names_in_"):
         EXPECTED_FEATURES = list(MODEL.feature_names_in_)
     elif hasattr(MODEL, "regressor_") and hasattr(MODEL.regressor_, "feature_names_in_"):
         EXPECTED_FEATURES = list(MODEL.regressor_.feature_names_in_)
     else:
-        EXPECTED_FEATURES = ["Crop", "Season", "Rainfall_mm", "Temperature_C", "Soil_Type", "Area_ha"]
+        EXPECTED_FEATURES = ["Crop", "Season", "Rainfall_mm", "Temperature_C", "State"]
 
-    # Extract model name
-    best_model_meta = METADATA.get("best_model", {})
-    MODEL_NAME = best_model_meta.get("architecture", "HistGradientBoosting")
+    MODEL_NAME = METADATA.get("model_name", "HistGradientBoostingRegressor (State-Aware)")
 
     print("=" * 70)
-    print("AgriPredict AI: Model Server Initialized Successfully")
-    print(f"Model Artifact  : {MODEL_PATH.name}")
-    print(f"Architecture    : {MODEL_NAME}")
-    print(f"Model Features  : {EXPECTED_FEATURES}")
-    print(f"Valid Crops     : {len(METADATA.get('valid_crops', []))} crops loaded")
+    print("AgriPredict AI Model Server Initialized")
+    print(f"Model File       : {MODEL_PATH.name}")
+    print(f"Model Name       : {MODEL_NAME}")
+    print(f"Expected Features: {EXPECTED_FEATURES}")
+    print(f"States Available : {len(METADATA.get('states', []))}")
     print("=" * 70)
 
 
-# Trigger artifact loading on module import
 load_artifacts()
 
 
 # =============================================================================
-# 1. Health Check Endpoint
+# 1. Health Check
 # =============================================================================
 @app.route("/health", methods=["GET"])
 def health_check():
-    """Returns service health status."""
-    return jsonify({"status": "ok"}), 200
+    return jsonify({"status": "ok", "model": MODEL_NAME}), 200
 
 
 # =============================================================================
-# 2. Options and Input Ranges Endpoint
+# 2. Options Endpoint
 # =============================================================================
 @app.route("/options", methods=["GET"])
 def get_options():
     """
-    Returns valid crops, seasons, soil types, valid_crop_seasons mapping,
-    and input ranges.
-    - Rainfall & Temperature use 1st to 99th percentile ranges from metadata.json.
-    - Area uses a fixed range of 0.1 to 10,000 hectares.
+    Returns available states, valid State-Crop-Season combinations,
+    typical seasonal weather statistics, and input hard limits.
     """
-    input_ranges_meta = METADATA.get("input_ranges", {})
-    rain_meta = input_ranges_meta.get("Rainfall_mm", {})
-    temp_meta = input_ranges_meta.get("Temperature_C", {})
-
-    options_payload = {
-        "crops": METADATA.get("valid_crops", []),
-        "seasons": METADATA.get("valid_seasons", []),
-        "soil_types": METADATA.get("valid_soil_types", []),
-        "valid_crop_seasons": METADATA.get("valid_crop_seasons", {}),
-        "input_ranges": {
-            "rainfall": {
-                "min": rain_meta.get("p01", 4.51),
-                "max": rain_meta.get("p99", 1754.85),
-                "unit": "mm",
-            },
-            "temperature": {
-                "min": temp_meta.get("p01", 11.96),
-                "max": temp_meta.get("p99", 32.39),
-                "unit": "°C",
-            },
-            "area": {
-                "min": 0.1,
-                "max": 10000.0,
-                "unit": "ha",
-            },
-        },
+    payload = {
+        "states": METADATA.get("states", []),
+        "valid_combos": METADATA.get("valid_combos", {}),
+        "typical_weather": METADATA.get("typical_weather", {}),
+        "hard_limits": METADATA.get("hard_limits", {
+            "rainfall_min": 0.0,
+            "rainfall_max": 5000.0,
+            "temperature_min": -5.0,
+            "temperature_max": 45.0,
+            "area_min": 0.1,
+            "area_max": 10000.0,
+        }),
     }
-    return jsonify(options_payload), 200
+    return jsonify(payload), 200
 
 
 # =============================================================================
@@ -160,37 +122,77 @@ def get_options():
 @app.route("/trends", methods=["GET"])
 def get_trends():
     """
-    Returns average yield per season for a specified crop from metadata.json,
-    strictly restricted to the valid seasons for that crop.
-    Returns 400 for an unknown or missing crop.
+    Returns historical average yield per valid season for a crop in a state.
+    If state is omitted, falls back to the national average per crop per season.
+    Returns 400 for unknown/invalid values.
     """
     crop = request.args.get("crop")
+    state = request.args.get("state")
+
     if not crop:
         return jsonify({"error": "Missing required query parameter: 'crop'"}), 400
 
-    valid_crops = METADATA.get("valid_crops", [])
-    if crop not in valid_crops:
+    valid_combos = METADATA.get("valid_combos", {})
+    national_avg = METADATA.get("national_avg_yield", {})
+    state_avg = METADATA.get("avg_yield", {})
+
+    all_crops = sorted({c for crops in valid_combos.values() for c in crops})
+
+    if crop not in all_crops and crop not in national_avg:
         return jsonify({
-            "error": f"Unknown crop '{crop}'. Valid crops are: {', '.join(valid_crops)}"
+            "error": f"Unknown crop '{crop}'. Valid crops are: {', '.join(all_crops[:15])}..."
         }), 400
 
-    valid_crop_seasons = METADATA.get("valid_crop_seasons", {}).get(crop, [])
-    avg_yield_map = METADATA.get("average_yield_per_crop_season", {})
+    if state:
+        if state not in valid_combos:
+            valid_states_str = ", ".join(sorted(valid_combos.keys()))
+            return jsonify({
+                "error": f"Invalid state '{state}'. Valid states are: {valid_states_str}"
+            }), 400
 
-    seasonal_trends = {}
-    trends_list = []
-    for season in valid_crop_seasons:
-        key = f"{crop}__{season}"
-        avg_val = avg_yield_map.get(key)
-        if avg_val is not None:
-            rounded_val = round(float(avg_val), 2)
-            seasonal_trends[season] = rounded_val
-            trends_list.append({"season": season, "average_yield": rounded_val})
+        crops_in_state = valid_combos.get(state, {})
+        if crop not in crops_in_state:
+            valid_crops_str = ", ".join(sorted(crops_in_state.keys()))
+            return jsonify({
+                "error": f"Crop '{crop}' is not valid for state '{state}'. Valid crops in {state} are: {valid_crops_str}"
+            }), 400
+
+        valid_seasons = crops_in_state[crop]
+        seasonal_averages = state_avg.get(state, {}).get(crop, {})
+        trends_list = [
+            {"season": s, "average_yield": round(float(seasonal_averages.get(s, 0.0)), 2)}
+            for s in valid_seasons
+            if s in seasonal_averages
+        ]
+
+        return jsonify({
+            "crop": crop,
+            "state": state,
+            "level": "state",
+            "valid_seasons": valid_seasons,
+            "seasonal_averages": {s: round(float(seasonal_averages[s]), 2) for s in seasonal_averages},
+            "trends": trends_list,
+        }), 200
+
+    # National average fallback
+    if crop not in national_avg:
+        return jsonify({
+            "error": f"No national average yield data available for crop '{crop}'."
+        }), 400
+
+    crop_nat = national_avg[crop]
+    valid_seasons = sorted(crop_nat.keys())
+    trends_list = [
+        {"season": s, "average_yield": round(float(crop_nat[s]), 2)}
+        for s in valid_seasons
+    ]
 
     return jsonify({
         "crop": crop,
-        "valid_seasons": valid_crop_seasons,
-        "seasonal_averages": seasonal_trends,
+        "state": None,
+        "level": "national",
+        "valid_seasons": valid_seasons,
+        "seasonal_averages": {s: round(float(crop_nat[s]), 2) for s in crop_nat},
         "trends": trends_list,
     }), 200
 
@@ -200,18 +202,13 @@ def get_trends():
 # =============================================================================
 @app.route("/metrics", methods=["GET"])
 def get_metrics():
-    """Returns the best model name along with time-based R², MAE, and RMSE."""
-    best_model_meta = METADATA.get("best_model", {})
-    time_metrics = best_model_meta.get("time_based_metrics", {})
-
-    metrics_payload = {
-        "model_name": best_model_meta.get("architecture", MODEL_NAME),
-        "time_based_r2": time_metrics.get("R2"),
-        "time_based_r2_log": time_metrics.get("R2_log"),
-        "time_based_mae": time_metrics.get("MAE"),
-        "time_based_rmse": time_metrics.get("RMSE"),
-    }
-    return jsonify(metrics_payload), 200
+    """Returns the rolling-window validation metrics from metadata.json."""
+    return jsonify({
+        "model_name": METADATA.get("model_name", MODEL_NAME),
+        "features": METADATA.get("features", EXPECTED_FEATURES),
+        "trained_on": METADATA.get("trained_on", "1997-2015"),
+        "validation_metrics": METADATA.get("validation_metrics", {}),
+    }), 200
 
 
 # =============================================================================
@@ -220,18 +217,22 @@ def get_metrics():
 @app.route("/predict", methods=["POST"])
 def predict():
     """
-    Accepts JSON: {crop, season, rainfall, temperature, soil, area}.
+    Accepts JSON: {state, crop, season, rainfall, temperature, area}.
     Validates:
-      - Field presence and JSON format
-      - Valid categories against metadata
-      - Valid (crop, season) pairing against valid_crop_seasons
-      - Value ranges (percentiles for rainfall & temperature, 0.1-10000 ha for area)
+      - Field presence and types
+      - (State, Crop, Season) combination validity against valid_combos
+      - Hard limits (400 if exceeded):
+          rainfall: 0 - 5000 mm
+          temperature: -5 - 45 °C
+          area: 0.1 - 10000 ha
+      - Seen min-max range check (adds warning message if outside state's historical seen range)
     Builds DataFrame matching MODEL feature_names_in_.
     Returns:
       {
-        "predicted_yield": float (t/ha, 2 decimals, non-negative),
-        "total_production": float (tonnes, 2 decimals),
+        "predicted_yield": float,
+        "total_production": float,
         "model_name": str,
+        "warnings": List[str],
         "note": str
       }
     """
@@ -242,145 +243,137 @@ def predict():
     if not isinstance(data, dict):
         return jsonify({"error": "Request payload must be a JSON object"}), 400
 
-    # 1. Check required fields
-    required_fields = ["crop", "season", "rainfall", "temperature", "soil", "area"]
+    # 1. Required fields
+    required_fields = ["state", "crop", "season", "rainfall", "temperature", "area"]
     for field in required_fields:
         if field not in data or data[field] is None or data[field] == "":
             return jsonify({"error": f"Missing required field: '{field}'"}), 400
 
-    raw_crop = data["crop"]
-    raw_season = data["season"]
-    raw_soil = data["soil"]
-    raw_rainfall = data["rainfall"]
-    raw_temp = data["temperature"]
-    raw_area = data["area"]
+    state = str(data["state"]).strip()
+    crop = str(data["crop"]).strip()
+    season = str(data["season"]).strip()
 
-    # 2. Validate categorical: Crop
-    if not isinstance(raw_crop, str):
-        return jsonify({"error": "Field 'crop' must be a string"}), 400
-    crop = raw_crop.strip()
-    valid_crops = METADATA.get("valid_crops", [])
-    if crop not in valid_crops:
-        return jsonify({
-            "error": f"Invalid crop '{crop}'. Valid options are: {', '.join(valid_crops)}"
-        }), 400
-
-    # 3. Validate categorical: Season
-    if not isinstance(raw_season, str):
-        return jsonify({"error": "Field 'season' must be a string"}), 400
-    season = raw_season.strip()
-    valid_seasons = METADATA.get("valid_seasons", [])
-    if season not in valid_seasons:
-        return jsonify({
-            "error": f"Invalid season '{season}'. Valid options are: {', '.join(valid_seasons)}"
-        }), 400
-
-    # 4. Validate Crop and Season combination
-    valid_crop_seasons = METADATA.get("valid_crop_seasons", {})
-    allowed_seasons_for_crop = valid_crop_seasons.get(crop, [])
-    if season not in allowed_seasons_for_crop:
-        return jsonify({
-            "error": (
-                f"Invalid crop and season combination: '{crop}' is not typically cultivated in '{season}' season. "
-                f"Valid seasons for '{crop}' are: {', '.join(allowed_seasons_for_crop)}"
-            )
-        }), 400
-
-    # 5. Validate categorical: Soil Type
-    if not isinstance(raw_soil, str):
-        return jsonify({"error": "Field 'soil' must be a string"}), 400
-    soil = raw_soil.strip()
-    valid_soil_types = METADATA.get("valid_soil_types", [])
-    if soil not in valid_soil_types:
-        return jsonify({
-            "error": f"Invalid soil type '{soil}'. Valid options are: {', '.join(valid_soil_types)}"
-        }), 400
-
-    # 6. Validate numerical: Rainfall (percentile range from metadata)
+    # 2. Parse numerical types
     try:
-        rainfall = float(raw_rainfall)
+        rainfall = float(data["rainfall"])
     except (ValueError, TypeError):
-        return jsonify({"error": f"Field 'rainfall' must be a numeric value, got '{raw_rainfall}'"}), 400
+        return jsonify({"error": "Field 'rainfall' must be a valid number (mm)."}), 400
 
-    rain_meta = METADATA.get("input_ranges", {}).get("Rainfall_mm", {})
-    rain_min = float(rain_meta.get("p01", 4.51))
-    rain_max = float(rain_meta.get("p99", 1754.85))
-    if rainfall < rain_min or rainfall > rain_max:
-        return jsonify({
-            "error": f"Rainfall value {rainfall} mm is out of range. Allowed range: {rain_min} to {rain_max} mm."
-        }), 400
-
-    # 7. Validate numerical: Temperature (percentile range from metadata)
     try:
-        temperature = float(raw_temp)
+        temperature = float(data["temperature"])
     except (ValueError, TypeError):
-        return jsonify({"error": f"Field 'temperature' must be a numeric value, got '{raw_temp}'"}), 400
+        return jsonify({"error": "Field 'temperature' must be a valid number (°C)."}), 400
 
-    temp_meta = METADATA.get("input_ranges", {}).get("Temperature_C", {})
-    temp_min = float(temp_meta.get("p01", 11.96))
-    temp_max = float(temp_meta.get("p99", 32.39))
-    if temperature < temp_min or temperature > temp_max:
-        return jsonify({
-            "error": f"Temperature value {temperature} °C is out of range. Allowed range: {temp_min} to {temp_max} °C."
-        }), 400
-
-    # 8. Validate numerical: Area (fixed range 0.1 to 10000 hectares)
     try:
-        area = float(raw_area)
+        area = float(data["area"])
     except (ValueError, TypeError):
-        return jsonify({"error": f"Field 'area' must be a numeric value, got '{raw_area}'"}), 400
+        return jsonify({"error": "Field 'area' must be a valid number (hectares)."}), 400
 
-    area_min = 0.1
-    area_max = 10000.0
-    if area < area_min or area > area_max:
+    # 3. Validate combination against valid_combos
+    valid_combos = METADATA.get("valid_combos", {})
+    if state not in valid_combos:
+        valid_states_str = ", ".join(sorted(valid_combos.keys()))
         return jsonify({
-            "error": f"Area value {area} ha is out of range. Allowed range: {area_min} to {area_max} hectares."
+            "error": f"Invalid state '{state}'. Valid states with sufficient historical data are: {valid_states_str}"
         }), 400
 
-    # 9. Build one-row DataFrame using exactly the columns expected by the pipeline
+    crops_in_state = valid_combos[state]
+    if crop not in crops_in_state:
+        valid_crops_str = ", ".join(sorted(crops_in_state.keys()))
+        return jsonify({
+            "error": f"Invalid crop '{crop}' for state '{state}'. Valid crops in {state} are: {valid_crops_str}"
+        }), 400
+
+    seasons_for_crop = crops_in_state[crop]
+    if season not in seasons_for_crop:
+        valid_seasons_str = ", ".join(seasons_for_crop)
+        return jsonify({
+            "error": f"Invalid season '{season}' for {crop} in {state}. Valid seasons are: {valid_seasons_str}"
+        }), 400
+
+    # 4. Hard limits validation (400 if exceeded)
+    hard_limits = METADATA.get("hard_limits", {})
+    r_min = hard_limits.get("rainfall_min", 0.0)
+    r_max = hard_limits.get("rainfall_max", 5000.0)
+    t_min = hard_limits.get("temperature_min", -5.0)
+    t_max = hard_limits.get("temperature_max", 45.0)
+    a_min = hard_limits.get("area_min", 0.1)
+    a_max = hard_limits.get("area_max", 10000.0)
+
+    if rainfall < r_min or rainfall > r_max:
+        return jsonify({
+            "error": f"Rainfall {rainfall} mm is outside the hard limit [{r_min}, {r_max}] mm."
+        }), 400
+
+    if temperature < t_min or temperature > t_max:
+        return jsonify({
+            "error": f"Temperature {temperature} °C is outside the hard limit [{t_min}, {t_max}] °C."
+        }), 400
+
+    if area < a_min or area > a_max:
+        return jsonify({
+            "error": f"Area {area} ha is outside the hard limit [{a_min}, {a_max}] ha."
+        }), 400
+
+    # 5. Seen min-max range check (adds warnings, still predicts)
+    warnings: List[str] = []
+    typical_weather = METADATA.get("typical_weather", {}).get(state, {}).get(season, {})
+    if typical_weather:
+        seen_rain_min = typical_weather.get("rain_min")
+        seen_rain_max = typical_weather.get("rain_max")
+        seen_temp_min = typical_weather.get("temp_min")
+        seen_temp_max = typical_weather.get("temp_max")
+
+        if seen_rain_min is not None and seen_rain_max is not None:
+            if rainfall < seen_rain_min or rainfall > seen_rain_max:
+                warnings.append(
+                    f"Rainfall ({rainfall:.1f} mm) is outside the historical observed range for {state} in {season} "
+                    f"({seen_rain_min:.1f} to {seen_rain_max:.1f} mm). The yield estimate may be less reliable."
+                )
+
+        if seen_temp_min is not None and seen_temp_max is not None:
+            if temperature < seen_temp_min or temperature > seen_temp_max:
+                warnings.append(
+                    f"Temperature ({temperature:.1f} °C) is outside the historical observed range for {state} in {season} "
+                    f"({seen_temp_min:.1f} to {seen_temp_max:.1f} °C). The yield estimate may be less reliable."
+                )
+
+    # 6. Build DataFrame matching the pipeline's feature names exactly
     feature_mapping = {
         "Crop": crop,
         "Season": season,
         "Rainfall_mm": rainfall,
         "Temperature_C": temperature,
-        "Soil_Type": soil,
-        "Area_ha": area,
+        "State": state,
     }
 
-    input_row = {}
-    for col in EXPECTED_FEATURES:
-        if col in feature_mapping:
-            input_row[col] = feature_mapping[col]
-        else:
-            input_row[col] = None
-
+    input_row = {col: feature_mapping.get(col, None) for col in EXPECTED_FEATURES}
     input_df = pd.DataFrame([input_row], columns=EXPECTED_FEATURES)
 
-    # 10. Perform model inference
+    # 7. Model inference
     try:
-        raw_prediction = float(MODEL.predict(input_df)[0])
+        raw_pred = float(MODEL.predict(input_df)[0])
     except Exception as e:
         return jsonify({"error": f"Model inference error: {str(e)}"}), 500
 
     # Safeguard: Never return negative yield
-    predicted_yield = round(max(0.0, raw_prediction), 2)
+    predicted_yield = round(max(0.0, raw_pred), 2)
     total_production = round(predicted_yield * area, 2)
 
     return jsonify({
         "predicted_yield": predicted_yield,
         "total_production": total_production,
         "model_name": MODEL_NAME,
-        "note": "This is an estimate based on historical district-level data.",
+        "warnings": warnings,
+        "note": "Estimate based on historical district-level data; typical error is about 30% of a crop's average yield.",
     }), 200
 
 
-
 # =============================================================================
-# 6. Static Frontend Routes
+# 6. Static Serving
 # =============================================================================
 @app.route("/", methods=["GET"])
 def serve_index():
-    """Serves index.html from PUBLIC_DIR as fallback."""
     if not (PUBLIC_DIR / "index.html").is_file():
         abort(404)
     return send_from_directory(str(PUBLIC_DIR), "index.html")
@@ -388,18 +381,11 @@ def serve_index():
 
 @app.route("/<path:filename>", methods=["GET"])
 def serve_static(filename: str):
-    """
-    Serves static assets (style.css, script.js, etc.) from PUBLIC_DIR as fallback.
-    Returns 404 for missing files. API routes take priority over this route.
-    """
     file_path = PUBLIC_DIR / filename
     if not file_path.is_file():
         abort(404)
     return send_from_directory(str(PUBLIC_DIR), filename)
 
 
-# =============================================================================
-# Server Entrypoint
-# =============================================================================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)

@@ -15,6 +15,7 @@
   --gold-text: #9B6E16;
   --cream: #F8F5EE;
   --card: #FFFFFF;
+
   --muted: #6B7280;
   --muted-light: #9CA3AF;
   --mint: #E3F0E1;
@@ -45,7 +46,9 @@
 }
 
 /* 2. BASE & RESET */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -69,7 +72,9 @@ body {
 }
 
 /* 3. TYPOGRAPHY HELPERS */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-serif);
   color: var(--forest);
   font-weight: 700;
@@ -989,13 +994,23 @@ a {
 
 /* 12. KEYFRAME ANIMATIONS */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUpFade {
@@ -1003,6 +1018,7 @@ a {
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1014,6 +1030,7 @@ a {
     opacity: 0;
     transform: translateY(16px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

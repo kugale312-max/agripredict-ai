@@ -1,0 +1,322 @@
+{
+  "Arhar/Tur": {
+    "samples": 666,
+    "MAE": 0.2544,
+    "RMSE": 0.3399,
+    "R2": 0.2598,
+    "mean_yield_t_ha": 0.8263,
+    "relative_mae_pct": 30.79
+  },
+  "Bajra": {
+    "samples": 394,
+    "MAE": 0.4246,
+    "RMSE": 0.5655,
+    "R2": 0.1017,
+    "mean_yield_t_ha": 1.2812,
+    "relative_mae_pct": 33.14
+  },
+  "Banana": {
+    "samples": 98,
+    "MAE": 9.162,
+    "RMSE": 11.0714,
+    "R2": 0.4218,
+    "mean_yield_t_ha": 34.7014,
+    "relative_mae_pct": 26.4
+  },
+  "Barley": {
+    "samples": 367,
+    "MAE": 0.524,
+    "RMSE": 0.6516,
+    "R2": 0.4501,
+    "mean_yield_t_ha": 1.8264,
+    "relative_mae_pct": 28.69
+  },
+  "Castor seed": {
+    "samples": 241,
+    "MAE": 0.1989,
+    "RMSE": 0.2863,
+    "R2": 0.0973,
+    "mean_yield_t_ha": 0.6218,
+    "relative_mae_pct": 31.99
+  },
+  "Coriander": {
+    "samples": 141,
+    "MAE": 0.1205,
+    "RMSE": 0.1351,
+    "R2": -1.7573,
+    "mean_yield_t_ha": 0.531,
+    "relative_mae_pct": 22.7
+  },
+  "Cowpea(Lobia)": {
+    "samples": 222,
+    "MAE": 0.2518,
+    "RMSE": 0.3727,
+    "R2": -0.145,
+    "mean_yield_t_ha": 0.5832,
+    "relative_mae_pct": 43.18
+  },
+  "Dry chillies": {
+    "samples": 444,
+    "MAE": 0.5337,
+    "RMSE": 0.9695,
+    "R2": 0.4495,
+    "mean_yield_t_ha": 1.7344,
+    "relative_mae_pct": 30.77
+  },
+  "Dry ginger": {
+    "samples": 45,
+    "MAE": 3.6871,
+    "RMSE": 5.554,
+    "R2": -0.0737,
+    "mean_yield_t_ha": 6.6834,
+    "relative_mae_pct": 55.17
+  },
+  "Garlic": {
+    "samples": 132,
+    "MAE": 0.815,
+    "RMSE": 0.8478,
+    "R2": 0.5462,
+    "mean_yield_t_ha": 5.4988,
+    "relative_mae_pct": 14.82
+  },
+  "Gram": {
+    "samples": 584,
+    "MAE": 0.3028,
+    "RMSE": 0.3938,
+    "R2": -0.2563,
+    "mean_yield_t_ha": 0.8279,
+    "relative_mae_pct": 36.57
+  },
+  "Groundnut": {
+    "samples": 752,
+    "MAE": 0.3913,
+    "RMSE": 0.5291,
+    "R2": 0.1921,
+    "mean_yield_t_ha": 1.3182,
+    "relative_mae_pct": 29.69
+  },
+  "Guar seed": {
+    "samples": 136,
+    "MAE": 0.1002,
+    "RMSE": 0.132,
+    "R2": -0.5097,
+    "mean_yield_t_ha": 0.8414,
+    "relative_mae_pct": 11.91
+  },
+  "Horse-gram": {
+    "samples": 381,
+    "MAE": 0.1303,
+    "RMSE": 0.1733,
+    "R2": 0.4472,
+    "mean_yield_t_ha": 0.5445,
+    "relative_mae_pct": 23.93
+  },
+  "Jowar": {
+    "samples": 533,
+    "MAE": 0.377,
+    "RMSE": 0.5149,
+    "R2": 0.0728,
+    "mean_yield_t_ha": 1.1697,
+    "relative_mae_pct": 32.23
+  },
+  "Khesari": {
+    "samples": 166,
+    "MAE": 0.2269,
+    "RMSE": 0.2961,
+    "R2": -0.0501,
+    "mean_yield_t_ha": 0.8671,
+    "relative_mae_pct": 26.17
+  },
+  "Linseed": {
+    "samples": 377,
+    "MAE": 0.1443,
+    "RMSE": 0.1847,
+    "R2": 0.3556,
+    "mean_yield_t_ha": 0.5712,
+    "relative_mae_pct": 25.26
+  },
+  "Maize": {
+    "samples": 1379,
+    "MAE": 0.9062,
+    "RMSE": 1.2878,
+    "R2": 0.0904,
+    "mean_yield_t_ha": 2.6513,
+    "relative_mae_pct": 34.18
+  },
+  "Masoor": {
+    "samples": 462,
+    "MAE": 0.2457,
+    "RMSE": 0.3237,
+    "R2": -0.0407,
+    "mean_yield_t_ha": 0.718,
+    "relative_mae_pct": 34.22
+  },
+  "Moong(Green Gram)": {
+    "samples": 1106,
+    "MAE": 0.1628,
+    "RMSE": 0.2132,
+    "R2": 0.2522,
+    "mean_yield_t_ha": 0.5275,
+    "relative_mae_pct": 30.87
+  },
+  "Moth": {
+    "samples": 5,
+    "MAE": 0.1581,
+    "RMSE": 0.2182,
+    "R2": 0.112,
+    "mean_yield_t_ha": 0.5915,
+    "relative_mae_pct": 26.73
+  },
+  "Niger seed": {
+    "samples": 181,
+    "MAE": 0.0878,
+    "RMSE": 0.1245,
+    "R2": 0.5699,
+    "mean_yield_t_ha": 0.3515,
+    "relative_mae_pct": 24.99
+  },
+  "Onion": {
+    "samples": 567,
+    "MAE": 2.9859,
+    "RMSE": 3.7264,
+    "R2": 0.5669,
+    "mean_yield_t_ha": 13.3304,
+    "relative_mae_pct": 22.4
+  },
+  "Peas & beans (Pulses)": {
+    "samples": 522,
+    "MAE": 0.2925,
+    "RMSE": 0.4472,
+    "R2": -0.0695,
+    "mean_yield_t_ha": 0.92,
+    "relative_mae_pct": 31.79
+  },
+  "Potato": {
+    "samples": 451,
+    "MAE": 2.9047,
+    "RMSE": 4.1791,
+    "R2": 0.6275,
+    "mean_yield_t_ha": 14.0062,
+    "relative_mae_pct": 20.74
+  },
+  "Ragi": {
+    "samples": 351,
+    "MAE": 0.3398,
+    "RMSE": 0.4692,
+    "R2": 0.4734,
+    "mean_yield_t_ha": 1.3557,
+    "relative_mae_pct": 25.07
+  },
+  "Rapeseed &Mustard": {
+    "samples": 618,
+    "MAE": 0.2429,
+    "RMSE": 0.3167,
+    "R2": 0.2062,
+    "mean_yield_t_ha": 0.8132,
+    "relative_mae_pct": 29.87
+  },
+  "Rice": {
+    "samples": 1019,
+    "MAE": 0.6467,
+    "RMSE": 0.8133,
+    "R2": 0.0973,
+    "mean_yield_t_ha": 2.4288,
+    "relative_mae_pct": 26.63
+  },
+  "Safflower": {
+    "samples": 112,
+    "MAE": 0.21,
+    "RMSE": 0.27,
+    "R2": 0.1776,
+    "mean_yield_t_ha": 0.6052,
+    "relative_mae_pct": 34.71
+  },
+  "Sesamum": {
+    "samples": 653,
+    "MAE": 0.1616,
+    "RMSE": 0.1991,
+    "R2": 0.4131,
+    "mean_yield_t_ha": 0.426,
+    "relative_mae_pct": 37.92
+  },
+  "Small millets": {
+    "samples": 400,
+    "MAE": 0.1856,
+    "RMSE": 0.2555,
+    "R2": 0.464,
+    "mean_yield_t_ha": 0.7309,
+    "relative_mae_pct": 25.4
+  },
+  "Soyabean": {
+    "samples": 293,
+    "MAE": 0.3084,
+    "RMSE": 0.4111,
+    "R2": 0.099,
+    "mean_yield_t_ha": 0.9792,
+    "relative_mae_pct": 31.5
+  },
+  "Sugarcane": {
+    "samples": 212,
+    "MAE": 16.005,
+    "RMSE": 20.5919,
+    "R2": -0.731,
+    "mean_yield_t_ha": 62.8144,
+    "relative_mae_pct": 25.48
+  },
+  "Sunflower": {
+    "samples": 492,
+    "MAE": 0.2617,
+    "RMSE": 0.3491,
+    "R2": 0.4855,
+    "mean_yield_t_ha": 1.0134,
+    "relative_mae_pct": 25.83
+  },
+  "Sweet potato": {
+    "samples": 250,
+    "MAE": 1.2747,
+    "RMSE": 1.7103,
+    "R2": 0.7984,
+    "mean_yield_t_ha": 9.5691,
+    "relative_mae_pct": 13.32
+  },
+  "Tapioca": {
+    "samples": 103,
+    "MAE": 2.3003,
+    "RMSE": 3.5868,
+    "R2": 0.6632,
+    "mean_yield_t_ha": 11.7118,
+    "relative_mae_pct": 19.64
+  },
+  "Tobacco": {
+    "samples": 164,
+    "MAE": 0.8142,
+    "RMSE": 1.1777,
+    "R2": 0.5389,
+    "mean_yield_t_ha": 2.6476,
+    "relative_mae_pct": 30.75
+  },
+  "Turmeric": {
+    "samples": 124,
+    "MAE": 1.1039,
+    "RMSE": 1.9975,
+    "R2": -0.5061,
+    "mean_yield_t_ha": 3.658,
+    "relative_mae_pct": 30.18
+  },
+  "Urad": {
+    "samples": 971,
+    "MAE": 0.1682,
+    "RMSE": 0.2104,
+    "R2": 0.1577,
+    "mean_yield_t_ha": 0.569,
+    "relative_mae_pct": 29.56
+  },
+  "Wheat": {
+    "samples": 703,
+    "MAE": 0.532,
+    "RMSE": 0.6864,
+    "R2": 0.4614,
+    "mean_yield_t_ha": 2.0434,
+    "relative_mae_pct": 26.03
+  }
+}

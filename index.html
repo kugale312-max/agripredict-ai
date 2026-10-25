@@ -194,12 +194,28 @@
 
           <div class="form-grid">
             
-            <!-- Crop Type -->
+            <!-- 1. State -->
+            <div class="form-group" id="group-state">
+              <label for="stateSelect" class="form-label">State</label>
+              <div class="select-wrapper">
+                <select id="stateSelect" name="state" class="form-control" required>
+                  <option value="" disabled selected>Loading states...</option>
+                </select>
+                <div class="select-chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <span class="error-message" id="error-state">Please select a state</span>
+            </div>
+
+            <!-- 2. Crop Type -->
             <div class="form-group" id="group-crop">
               <label for="cropSelect" class="form-label">Crop Type</label>
               <div class="select-wrapper">
                 <select id="cropSelect" name="crop" class="form-control" required>
-                  <option value="" disabled selected>Loading crops...</option>
+                  <option value="" disabled selected>Select state first</option>
                 </select>
                 <div class="select-chevron">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -210,15 +226,12 @@
               <span class="error-message" id="error-crop">Please select a crop type</span>
             </div>
 
-            <!-- Season -->
+            <!-- 3. Season -->
             <div class="form-group" id="group-season">
               <label for="seasonSelect" class="form-label">Season</label>
               <div class="select-wrapper">
                 <select id="seasonSelect" name="season" class="form-control" required>
-                  <option value="" disabled selected>Select season</option>
-                  <option value="Kharif">Kharif</option>
-                  <option value="Rabi">Rabi</option>
-                  <option value="Zaid">Zaid</option>
+                  <option value="" disabled selected>Select crop first</option>
                 </select>
                 <div class="select-chevron">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -229,7 +242,25 @@
               <span class="error-message" id="error-season">Please select a season</span>
             </div>
 
-            <!-- Rainfall (mm) -->
+            <!-- 4. Area (hectares) -->
+            <div class="form-group" id="group-area">
+              <label for="areaInput" class="form-label">Area (hectares)</label>
+              <input 
+                type="number" 
+                id="areaInput" 
+                name="area" 
+                class="form-control" 
+                placeholder="e.g. 2.5" 
+                min="0.1" 
+                max="10000" 
+                step="any"
+                required
+              />
+              <span class="field-hint" id="hint-area" style="font-size: 11.5px; color: var(--muted); margin-top: 4px; display: block;"></span>
+              <span class="error-message" id="error-area">Enter farm area in hectares</span>
+            </div>
+
+            <!-- 5. Rainfall (mm) -->
             <div class="form-group" id="group-rainfall">
               <label for="rainfallInput" class="form-label">Rainfall (mm)</label>
               <input 
@@ -247,7 +278,7 @@
               <span class="error-message" id="error-rainfall">Enter rainfall in mm</span>
             </div>
 
-            <!-- Temperature (°C) -->
+            <!-- 6. Temperature (°C) -->
             <div class="form-group" id="group-temperature">
               <label for="tempInput" class="form-label">Temperature (°C)</label>
               <input 
@@ -256,47 +287,13 @@
                 name="temperature" 
                 class="form-control" 
                 placeholder="e.g. 27" 
-                min="-10" 
-                max="60" 
+                min="-5" 
+                max="45" 
                 step="any"
                 required
               />
               <span class="field-hint" id="hint-temperature" style="font-size: 11.5px; color: var(--muted); margin-top: 4px; display: block;"></span>
               <span class="error-message" id="error-temperature">Enter temperature in °C</span>
-            </div>
-
-            <!-- Soil Type -->
-            <div class="form-group" id="group-soil">
-              <label for="soilSelect" class="form-label">Soil Type</label>
-              <div class="select-wrapper">
-                <select id="soilSelect" name="soil" class="form-control" required>
-                  <option value="" disabled selected>Loading soil types...</option>
-                </select>
-                <div class="select-chevron">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </div>
-              </div>
-              <span class="error-message" id="error-soil">Please select soil type</span>
-            </div>
-
-            <!-- Area (hectares) -->
-            <div class="form-group" id="group-area">
-              <label for="areaInput" class="form-label">Area (hectares)</label>
-              <input 
-                type="number" 
-                id="areaInput" 
-                name="area" 
-                class="form-control" 
-                placeholder="e.g. 2.5" 
-                min="0.01" 
-                max="100000" 
-                step="any"
-                required
-              />
-              <span class="field-hint" id="hint-area" style="font-size: 11.5px; color: var(--muted); margin-top: 4px; display: block;"></span>
-              <span class="error-message" id="error-area">Enter farm area in hectares</span>
             </div>
 
           </div>
@@ -343,6 +340,18 @@
             <div class="analysis-indicator"></div>
             <div class="analysis-text" id="resultAnalysisText">
               Favorable rainfall and temperature match for optimal crop productivity.
+            </div>
+          </div>
+
+          <!-- Soft Amber Warning Box for out-of-typical-range observations -->
+          <div class="result-warning-box" id="resultWarningBox" style="display: none; background-color: #FEF9C3; border: 1px solid #FDE047; color: #854D0E; padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-top: 14px; line-height: 1.45;">
+            <div style="display: flex; align-items: flex-start; gap: 8px;">
+              <svg style="width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; color: #B45309;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <div id="resultWarningText"></div>
             </div>
           </div>
         </div>
@@ -403,11 +412,11 @@
           <h3 class="about-title">About AgriPredict AI</h3>
         </div>
         <p class="about-desc">
-          AgriPredict AI is an academic Artificial Intelligence and Machine Learning (AIML) mini project demonstrating yield estimation through agronomic parameters including crop variety, seasonal factors, rainfall, temperature, and soil characteristics.
+          AgriPredict AI is an academic Artificial Intelligence and Machine Learning (AIML) mini project demonstrating yield estimation through agronomic parameters including state, crop variety, seasonal factors, rainfall, and temperature.
         </p>
         <div class="about-meta">
           <span class="meta-tag">AIML Mini Project</span>
-          <span class="meta-tag">Random Forest & Regressor Architecture</span>
+          <span class="meta-tag">HistGradientBoosting Architecture</span>
           <span class="meta-tag">REST API Ready</span>
         </div>
       </div>

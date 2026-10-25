@@ -1,10 +1,9 @@
 /**
- * AgriPredict AI — Frontend Application Logic
- * Integrates directly with Flask backend REST API
+ * AgriPredict AI — Frontend Application Logic (State-Aware)
+ * Integrates directly with Flask backend REST API (Variant C: State-Aware Architecture)
  */
 
 // 1. API Base URL configuration
-// Use '' (same origin) by default, except when opened from a file or port 8000 where it stays http://localhost:5000
 const API_BASE_URL = (typeof window !== 'undefined' && (window.location.protocol === 'file:' || window.location.port === '8000'))
   ? 'http://localhost:5000'
   : '';
@@ -28,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
    ========================================================================== */
 
 /**
- * Loads dynamic options, input ranges, and model metrics from the Flask backend.
+ * Loads dynamic options, cascading combinations, weather stats, and model metrics.
  * Auto-reconnects every 4 seconds in the background if the server is unreachable.
  */
 async function loadInitialData() {
@@ -36,12 +35,11 @@ async function loadInitialData() {
   isFetchingInitialData = true;
 
   const serverErrorBanner = document.getElementById('serverErrorBanner');
+  const stateSelect = document.getElementById('stateSelect');
   const cropSelect = document.getElementById('cropSelect');
-  const soilSelect = document.getElementById('soilSelect');
   const seasonSelect = document.getElementById('seasonSelect');
 
   try {
-    // 1. Fetch options (crops, seasons, soils, valid combinations, input ranges)
     const optionsResp = await fetch(`${API_BASE_URL}/options`);
     if (!optionsResp.ok) {
       throw new Error(`Server returned HTTP ${optionsResp.status}`);
@@ -49,60 +47,54 @@ async function loadInitialData() {
     appOptions = await optionsResp.json();
     lastServerCheckFailed = false;
 
-    // Stop background reconnect timer after success
     if (reconnectTimer) {
       clearTimeout(reconnectTimer);
       reconnectTimer = null;
     }
 
-    // Hide error banner automatically
     if (serverErrorBanner) {
       serverErrorBanner.style.display = 'none';
     }
 
-    // Populate Crop dropdown
-    if (cropSelect && Array.isArray(appOptions.crops)) {
-      cropSelect.innerHTML = '<option value="" disabled selected>Select crop</option>';
-      appOptions.crops.forEach(crop => {
+    // Populate State dropdown
+    if (stateSelect && Array.isArray(appOptions.states)) {
+      stateSelect.innerHTML = '<option value="" disabled selected>Select state</option>';
+      appOptions.states.forEach(st => {
         const opt = document.createElement('option');
-        opt.value = crop;
-        opt.textContent = crop;
-        cropSelect.appendChild(opt);
+        opt.value = st;
+        opt.textContent = st;
+        stateSelect.appendChild(opt);
       });
     }
 
-    // Populate Soil dropdown
-    if (soilSelect && Array.isArray(appOptions.soil_types)) {
-      soilSelect.innerHTML = '<option value="" disabled selected>Select soil</option>';
-      appOptions.soil_types.forEach(soil => {
-        const opt = document.createElement('option');
-        opt.value = soil;
-        opt.textContent = soil;
-        soilSelect.appendChild(opt);
-      });
+    // Reset Crop dropdown until state is selected
+    if (cropSelect) {
+      cropSelect.innerHTML = '<option value="" disabled selected>Select state first</option>';
+      cropSelect.disabled = true;
     }
 
-    // Initialize Season dropdown (all disabled until a crop is selected)
-    if (seasonSelect && Array.isArray(appOptions.seasons)) {
-      seasonSelect.innerHTML = '<option value="" disabled selected>Select season</option>';
-      appOptions.seasons.forEach(season => {
-        const opt = document.createElement('option');
-        opt.value = season;
-        opt.textContent = season;
-        opt.disabled = true;
-        seasonSelect.appendChild(opt);
-      });
+    // Reset Season dropdown until crop is selected
+    if (seasonSelect) {
+      seasonSelect.innerHTML = '<option value="" disabled selected>Select crop first</option>';
+      seasonSelect.disabled = true;
     }
 
-    // Setup input ranges, placeholders, and allowed range helper hints
-    if (appOptions.input_ranges) {
-      setupInputRanges(appOptions.input_ranges);
+    // Setup input hard limits
+    if (appOptions.hard_limits) {
+      setupInputRanges(appOptions.hard_limits);
     }
 
-    // Load seasonal trends chart for the first available crop
-    if (appOptions.crops && appOptions.crops.length > 0) {
-      const firstCrop = appOptions.crops[0];
-      await loadSeasonalTrends(firstCrop);
+    // Initial trends chart with national wheat or first available state/crop
+    if (appOptions.states && appOptions.states.length > 0) {
+      const defaultState = appOptions.states.includes('Punjab') ? 'Punjab' : appOptions.states[0];
+      const validCropsForDefault = appOptions.valid_combos && appOptions.valid_combos[defaultState]
+        ? Object.keys(appOptions.valid_combos[defaultState])
+        : [];
+      const defaultCrop = validCropsForDefault.includes('Wheat') ? 'Wheat' : validCropsForDefault[0];
+
+      if (defaultCrop) {
+        await loadSeasonalTrends(defaultCrop, defaultState);
+      }
     }
 
     // Load model evaluation metrics for footer
@@ -112,7 +104,6 @@ async function loadInitialData() {
     console.error('Failed to load options from backend:', err);
     lastServerCheckFailed = true;
 
-    // Keep the red banner and add small "Retry now" link
     if (serverErrorBanner) {
       serverErrorBanner.innerHTML = 'Cannot reach the prediction server. Start the backend and try again. <a href="#" id="retryNowLink" style="color: #991B1B; font-weight: 600; text-decoration: underline; margin-left: 8px; cursor: pointer;">Retry now</a>';
       serverErrorBanner.style.display = 'block';
@@ -130,18 +121,16 @@ async function loadInitialData() {
       }
     }
 
-    // Replace "Server unreachable" in the dropdowns with "Connecting to server..."
+    if (stateSelect) {
+      stateSelect.innerHTML = '<option value="" disabled selected>Connecting to server...</option>';
+    }
     if (cropSelect) {
       cropSelect.innerHTML = '<option value="" disabled selected>Connecting to server...</option>';
-    }
-    if (soilSelect) {
-      soilSelect.innerHTML = '<option value="" disabled selected>Connecting to server...</option>';
     }
     if (seasonSelect) {
       seasonSelect.innerHTML = '<option value="" disabled selected>Connecting to server...</option>';
     }
 
-    // Auto-reconnect: retry every 4 seconds in the background
     if (reconnectTimer) {
       clearTimeout(reconnectTimer);
     }
@@ -155,48 +144,42 @@ async function loadInitialData() {
 }
 
 /**
- * Configure min/max/placeholder and helper hints for numerical inputs.
+ * Configure hard limits and default helper hints for numerical inputs.
  */
-function setupInputRanges(ranges) {
-  // Rainfall
+function setupInputRanges(limits) {
   const rainInput = document.getElementById('rainfallInput');
   const rainHint = document.getElementById('hint-rainfall');
-  if (rainInput && ranges.rainfall) {
-    rainInput.min = ranges.rainfall.min;
-    rainInput.max = ranges.rainfall.max;
-    rainInput.placeholder = 'e.g. 700';
-    if (rainHint) {
-      rainHint.textContent = `Allowed range: ${ranges.rainfall.min} – ${ranges.rainfall.max} mm`;
+  if (rainInput) {
+    rainInput.min = limits.rainfall_min !== undefined ? limits.rainfall_min : 0;
+    rainInput.max = limits.rainfall_max !== undefined ? limits.rainfall_max : 5000;
+    if (rainHint && !rainHint.dataset.custom) {
+      rainHint.textContent = `Hard limit: ${rainInput.min} – ${rainInput.max} mm`;
     }
   }
 
-  // Temperature
   const tempInput = document.getElementById('tempInput');
   const tempHint = document.getElementById('hint-temperature');
-  if (tempInput && ranges.temperature) {
-    tempInput.min = ranges.temperature.min;
-    tempInput.max = ranges.temperature.max;
-    tempInput.placeholder = 'e.g. 26';
-    if (tempHint) {
-      tempHint.textContent = `Allowed range: ${ranges.temperature.min} – ${ranges.temperature.max} °C`;
+  if (tempInput) {
+    tempInput.min = limits.temperature_min !== undefined ? limits.temperature_min : -5;
+    tempInput.max = limits.temperature_max !== undefined ? limits.temperature_max : 45;
+    if (tempHint && !tempHint.dataset.custom) {
+      tempHint.textContent = `Hard limit: ${tempInput.min} – ${tempInput.max} °C`;
     }
   }
 
-  // Area
   const areaInput = document.getElementById('areaInput');
   const areaHint = document.getElementById('hint-area');
-  if (areaInput && ranges.area) {
-    areaInput.min = ranges.area.min;
-    areaInput.max = ranges.area.max;
-    areaInput.placeholder = 'e.g. 2.5';
+  if (areaInput) {
+    areaInput.min = limits.area_min !== undefined ? limits.area_min : 0.1;
+    areaInput.max = limits.area_max !== undefined ? limits.area_max : 10000;
     if (areaHint) {
-      areaHint.textContent = `Allowed range: ${ranges.area.min} – ${ranges.area.max} ha`;
+      areaHint.textContent = `Allowed range: ${areaInput.min} – ${areaInput.max} ha`;
     }
   }
 }
 
 /**
- * Fetches /metrics and appends summary line to footer.
+ * Fetches /metrics and builds dynamic summary line for footer.
  */
 async function loadModelMetrics() {
   const footerMetrics = document.getElementById('footerMetrics');
@@ -205,13 +188,16 @@ async function loadModelMetrics() {
   try {
     const resp = await fetch(`${API_BASE_URL}/metrics`);
     if (!resp.ok) return;
-    const metrics = await resp.json();
+    const data = await resp.json();
 
-    const modelName = metrics.model_name || 'HistGradientBoosting';
-    const r2Val = typeof metrics.time_based_r2 === 'number' ? metrics.time_based_r2.toFixed(4) : metrics.time_based_r2;
-    const maeVal = typeof metrics.time_based_mae === 'number' ? metrics.time_based_mae.toFixed(4) : metrics.time_based_mae;
+    const valMeta = data.validation_metrics || {};
+    const meanWindows = valMeta.mean_over_three_rolling_windows_2007_2015 || {};
+    const modelStats = meanWindows.model_variant_C || {};
 
-    footerMetrics.textContent = `Model: ${modelName} | R² ${r2Val} | MAE ${maeVal} t/ha (tested on 2013-2015)`;
+    const maeVal = typeof modelStats.mae === 'number' ? modelStats.mae.toFixed(2) : '0.80';
+    const relMaePct = typeof modelStats.macro_crop_rel_mae_pct === 'number' ? Math.round(modelStats.macro_crop_rel_mae_pct) : 31;
+
+    footerMetrics.textContent = `Model: HistGradientBoosting (state-aware) | MAE ${maeVal} t/ha | typical error about ${relMaePct}% of a crop's average yield (rolling validation 2007-2015)`;
   } catch (err) {
     console.warn('Metrics endpoint unavailable:', err);
   }
@@ -221,9 +207,6 @@ async function loadModelMetrics() {
    3. SEASONAL CHART & TRENDS INTEGRATION
    ========================================================================== */
 
-/**
- * Initializes the Chart.js canvas instance.
- */
 function initSeasonalChart() {
   const canvas = document.getElementById('seasonalChart');
   if (!canvas) return;
@@ -306,26 +289,29 @@ function initSeasonalChart() {
 }
 
 /**
- * Fetches real historical trends for a crop and updates Chart.js, badge, and Best Outlook.
+ * Fetches historical seasonal trends for a crop and state and updates Chart.js.
  */
-async function loadSeasonalTrends(cropName) {
+async function loadSeasonalTrends(cropName, stateName) {
   if (!cropName) return;
 
   try {
-    const resp = await fetch(`${API_BASE_URL}/trends?crop=${encodeURIComponent(cropName)}`);
+    let url = `${API_BASE_URL}/trends?crop=${encodeURIComponent(cropName)}`;
+    if (stateName) {
+      url += `&state=${encodeURIComponent(stateName)}`;
+    }
+
+    const resp = await fetch(url);
     if (!resp.ok) return;
     const data = await resp.json();
 
     const trends = data.trends || [];
     const validSeasons = data.valid_seasons || [];
 
-    // 1. Update data badge to 'Based on historical data'
     const badgeText = document.getElementById('chartDataBadgeText');
     if (badgeText) {
-      badgeText.textContent = 'Based on historical data';
+      badgeText.textContent = stateName ? `Historical data (${stateName})` : 'National historical data';
     }
 
-    // 2. Identify season with highest average yield
     let bestSeason = validSeasons[0] || 'Kharif';
     let maxYield = -Infinity;
     trends.forEach(item => {
@@ -335,17 +321,16 @@ async function loadSeasonalTrends(cropName) {
       }
     });
 
-    // 3. Update Best Outlook box
     const highlightTitle = document.getElementById('highlightTitle');
     const highlightDesc = document.getElementById('highlightDesc');
     if (highlightTitle) {
       highlightTitle.textContent = `Best outlook: ${bestSeason} season`;
     }
     if (highlightDesc) {
-      highlightDesc.textContent = `Highest average historical yield for ${cropName}.`;
+      const locationLabel = stateName ? ` in ${stateName}` : ' nationally';
+      highlightDesc.textContent = `Highest average historical yield for ${cropName}${locationLabel}.`;
     }
 
-    // 4. Update Chart.js dataset
     if (seasonalChartInstance) {
       const labels = trends.map(t => t.season);
       const yields = trends.map(t => t.average_yield);
@@ -356,7 +341,6 @@ async function loadSeasonalTrends(cropName) {
       const chartLegendText = document.getElementById('chartLegendText');
 
       if (trends.length <= 1) {
-        // Single valid season: show single point and note instead of line
         seasonalChartInstance.data.datasets[0].showLine = false;
         seasonalChartInstance.data.datasets[0].pointRadius = 8;
         seasonalChartInstance.data.datasets[0].pointHoverRadius = 10;
@@ -365,10 +349,9 @@ async function loadSeasonalTrends(cropName) {
 
         if (chartLegendText) {
           const singleSeason = trends[0] ? trends[0].season : 'Single Season';
-          chartLegendText.textContent = `Single season crop (${singleSeason}) · historical average yield`;
+          chartLegendText.textContent = `Single season crop (${singleSeason})${stateName ? ' in ' + stateName : ''} · historical average yield`;
         }
       } else {
-        // Multiple seasons: show connected line with gold highlight on best season
         seasonalChartInstance.data.datasets[0].showLine = true;
         seasonalChartInstance.data.datasets[0].borderWidth = 3;
         seasonalChartInstance.data.datasets[0].pointRadius = 6;
@@ -380,7 +363,9 @@ async function loadSeasonalTrends(cropName) {
         seasonalChartInstance.data.datasets[0].pointHoverBackgroundColor = pointColors;
 
         if (chartLegendText) {
-          chartLegendText.textContent = 'Historical yield · tonnes per hectare';
+          chartLegendText.textContent = stateName
+            ? `Historical yield in ${stateName} · tonnes per hectare`
+            : 'Historical yield · tonnes per hectare';
         }
       }
 
@@ -392,76 +377,193 @@ async function loadSeasonalTrends(cropName) {
 }
 
 /* ==========================================================================
-   4. FORM HANDLING & REAL PREDICTION API INTEGRATION
+   4. CASCADING DROPDOWNS & PRE-FILLING TYPICAL WEATHER
+   ========================================================================== */
+
+function handleStateChange() {
+  const stateSelect = document.getElementById('stateSelect');
+  const cropSelect = document.getElementById('cropSelect');
+  const seasonSelect = document.getElementById('seasonSelect');
+  const rainfallInput = document.getElementById('rainfallInput');
+  const tempInput = document.getElementById('tempInput');
+  const hintRain = document.getElementById('hint-rainfall');
+  const hintTemp = document.getElementById('hint-temperature');
+
+  if (!stateSelect || !cropSelect || !seasonSelect || !appOptions) return;
+
+  const state = stateSelect.value;
+  if (!state || !appOptions.valid_combos || !appOptions.valid_combos[state]) {
+    cropSelect.innerHTML = '<option value="" disabled selected>Select state first</option>';
+    cropSelect.disabled = true;
+    seasonSelect.innerHTML = '<option value="" disabled selected>Select crop first</option>';
+    seasonSelect.disabled = true;
+    return;
+  }
+
+  // Populate valid crops for this state
+  const validCrops = Object.keys(appOptions.valid_combos[state]).sort();
+  cropSelect.innerHTML = '<option value="" disabled selected>Select crop</option>';
+  validCrops.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    cropSelect.appendChild(opt);
+  });
+  cropSelect.disabled = false;
+
+  // Reset Season
+  seasonSelect.innerHTML = '<option value="" disabled selected>Select crop first</option>';
+  seasonSelect.disabled = true;
+
+  // Reset weather inputs & hints
+  if (rainfallInput) rainfallInput.value = '';
+  if (tempInput) tempInput.value = '';
+  if (hintRain) {
+    delete hintRain.dataset.custom;
+    hintRain.textContent = appOptions.hard_limits ? `Hard limit: ${appOptions.hard_limits.rainfall_min} – ${appOptions.hard_limits.rainfall_max} mm` : '';
+  }
+  if (hintTemp) {
+    delete hintTemp.dataset.custom;
+    hintTemp.textContent = appOptions.hard_limits ? `Hard limit: ${appOptions.hard_limits.temperature_min} – ${appOptions.hard_limits.temperature_max} °C` : '';
+  }
+}
+
+function handleCropChange() {
+  const stateSelect = document.getElementById('stateSelect');
+  const cropSelect = document.getElementById('cropSelect');
+  const seasonSelect = document.getElementById('seasonSelect');
+
+  if (!stateSelect || !cropSelect || !seasonSelect || !appOptions) return;
+
+  const state = stateSelect.value;
+  const crop = cropSelect.value;
+
+  if (!state || !crop || !appOptions.valid_combos[state] || !appOptions.valid_combos[state][crop]) {
+    seasonSelect.innerHTML = '<option value="" disabled selected>Select crop first</option>';
+    seasonSelect.disabled = true;
+    return;
+  }
+
+  const validSeasons = appOptions.valid_combos[state][crop];
+  seasonSelect.innerHTML = '<option value="" disabled selected>Select season</option>';
+  validSeasons.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    seasonSelect.appendChild(opt);
+  });
+  seasonSelect.disabled = false;
+
+  // Update trends chart for state & crop
+  loadSeasonalTrends(crop, state);
+}
+
+function handleSeasonChange() {
+  const stateSelect = document.getElementById('stateSelect');
+  const seasonSelect = document.getElementById('seasonSelect');
+  const rainfallInput = document.getElementById('rainfallInput');
+  const tempInput = document.getElementById('tempInput');
+  const hintRain = document.getElementById('hint-rainfall');
+  const hintTemp = document.getElementById('hint-temperature');
+
+  if (!stateSelect || !seasonSelect || !appOptions) return;
+
+  const state = stateSelect.value;
+  const season = seasonSelect.value;
+
+  if (!state || !season) return;
+
+  // Look up typical weather for state and season
+  const typical = appOptions.typical_weather && appOptions.typical_weather[state]
+    ? appOptions.typical_weather[state][season]
+    : null;
+
+  if (typical) {
+    if (rainfallInput) {
+      rainfallInput.value = typical.rain_mean;
+      const grp = document.getElementById('group-rainfall');
+      if (grp) grp.classList.remove('has-error');
+    }
+    if (tempInput) {
+      tempInput.value = typical.temp_mean;
+      const grp = document.getElementById('group-temperature');
+      if (grp) grp.classList.remove('has-error');
+    }
+
+    if (hintRain) {
+      hintRain.dataset.custom = 'true';
+      hintRain.textContent = `Historical average for ${state}, ${season} (observed: ${typical.rain_min} – ${typical.rain_max} mm). Edit if you know this year's value.`;
+    }
+
+    if (hintTemp) {
+      hintTemp.dataset.custom = 'true';
+      hintTemp.textContent = `Historical average for ${state}, ${season} (observed: ${typical.temp_min} – ${typical.temp_max} °C). Edit if you know this year's value.`;
+    }
+  }
+}
+
+/* ==========================================================================
+   5. FORM HANDLING & REAL PREDICTION API INTEGRATION
    ========================================================================== */
 
 function initFormValidation() {
   const form = document.getElementById('yieldForm');
   const predictBtn = document.getElementById('predictBtn');
   const resultPanel = document.getElementById('predictionResult');
+  const resultWarningBox = document.getElementById('resultWarningBox');
+  const resultWarningText = document.getElementById('resultWarningText');
   const heroYieldValue = document.getElementById('heroYieldValue');
   const heroYieldCaption = document.getElementById('heroYieldCaption');
   const formErrorBanner = document.getElementById('formErrorBanner');
+
+  const stateSelect = document.getElementById('stateSelect');
   const cropSelect = document.getElementById('cropSelect');
   const seasonSelect = document.getElementById('seasonSelect');
 
   if (!form) return;
 
   const fields = [
+    { id: 'stateSelect', groupId: 'group-state', errorId: 'error-state' },
     { id: 'cropSelect', groupId: 'group-crop', errorId: 'error-crop' },
     { id: 'seasonSelect', groupId: 'group-season', errorId: 'error-season' },
+    { id: 'areaInput', groupId: 'group-area', errorId: 'error-area' },
     { id: 'rainfallInput', groupId: 'group-rainfall', errorId: 'error-rainfall' },
-    { id: 'tempInput', groupId: 'group-temperature', errorId: 'error-temperature' },
-    { id: 'soilSelect', groupId: 'group-soil', errorId: 'error-soil' },
-    { id: 'areaInput', groupId: 'group-area', errorId: 'error-area' }
+    { id: 'tempInput', groupId: 'group-temperature', errorId: 'error-temperature' }
   ];
 
-  // Helper to clear error state
   const clearFieldError = (f) => {
     const grp = document.getElementById(f.groupId);
     if (grp) grp.classList.remove('has-error');
     if (formErrorBanner) formErrorBanner.style.display = 'none';
   };
 
-  // Attach clear error listeners
   fields.forEach(f => {
     const el = document.getElementById(f.id);
     if (!el) return;
-
     el.addEventListener('input', () => clearFieldError(f));
     el.addEventListener('change', () => clearFieldError(f));
   });
 
-  // Handle crop change: filter seasons and update seasonal chart
-  if (cropSelect) {
-    cropSelect.addEventListener('change', () => {
-      const selectedCrop = cropSelect.value;
-      if (!selectedCrop) return;
-
-      // Update seasonal chart
-      loadSeasonalTrends(selectedCrop);
-
-      // Filter seasons based on valid_crop_seasons from options
-      if (seasonSelect && appOptions && appOptions.valid_crop_seasons) {
-        const validSeasons = appOptions.valid_crop_seasons[selectedCrop] || [];
-
-        Array.from(seasonSelect.options).forEach(opt => {
-          if (!opt.value) return; // Keep "Select season" placeholder
-          const isValid = validSeasons.includes(opt.value);
-          opt.disabled = !isValid;
-        });
-
-        // Reset season if the currently selected season is not valid for this crop
-        if (seasonSelect.value && !validSeasons.includes(seasonSelect.value)) {
-          seasonSelect.value = '';
-          const grp = document.getElementById('group-season');
-          if (grp) grp.classList.remove('has-error');
-        }
-      }
+  // Cascading event bindings
+  if (stateSelect) {
+    stateSelect.addEventListener('change', () => {
+      handleStateChange();
     });
   }
 
-  // Re-check server connection helper for Predict button
+  if (cropSelect) {
+    cropSelect.addEventListener('change', () => {
+      handleCropChange();
+    });
+  }
+
+  if (seasonSelect) {
+    seasonSelect.addEventListener('change', () => {
+      handleSeasonChange();
+    });
+  }
+
+  // Server re-check helper
   const ensureServerConnected = async () => {
     if (!appOptions || lastServerCheckFailed) {
       predictBtn.classList.add('loading');
@@ -507,18 +609,15 @@ function initFormValidation() {
       formErrorBanner.textContent = '';
     }
 
-    // Re-check server if the last check failed, instead of failing silently
     if (!appOptions || lastServerCheckFailed) {
       const isConnected = await ensureServerConnected();
-      if (!isConnected) {
-        return;
-      }
+      if (!isConnected) return;
     }
 
     let hasErrors = false;
     const formData = {};
 
-    // 1. Client-side field presence validation
+    // 1. Presence validation
     fields.forEach(f => {
       const el = document.getElementById(f.id);
       const grp = document.getElementById(f.groupId);
@@ -540,64 +639,73 @@ function initFormValidation() {
       return;
     }
 
-    // 2. Client-side crop & season pairing validation
-    if (appOptions && appOptions.valid_crop_seasons) {
-      const validSeasons = appOptions.valid_crop_seasons[formData.crop] || [];
-      if (!validSeasons.includes(formData.season)) {
-        const grp = document.getElementById('group-season');
-        const errEl = document.getElementById('error-season');
-        if (grp) grp.classList.add('has-error');
-        if (errEl) errEl.textContent = `${formData.crop} is not cultivated in ${formData.season} season.`;
-        if (formErrorBanner) {
-          formErrorBanner.textContent = `Invalid crop and season combination: ${formData.crop} is only grown in ${validSeasons.join(', ')}.`;
-          formErrorBanner.style.display = 'block';
-        }
-        return;
+    // 2. Combination check against valid_combos
+    const validCombos = appOptions.valid_combos || {};
+    if (!validCombos[formData.state] || !validCombos[formData.state][formData.crop]) {
+      if (formErrorBanner) {
+        formErrorBanner.textContent = `Crop ${formData.crop} is not cultivated in ${formData.state}.`;
+        formErrorBanner.style.display = 'block';
       }
+      return;
     }
 
-    // 3. Client-side numerical range validation
-    if (appOptions && appOptions.input_ranges) {
-      const ranges = appOptions.input_ranges;
-
-      // Rainfall check
-      const rainVal = parseFloat(formData.rainfall);
-      if (ranges.rainfall && (rainVal < ranges.rainfall.min || rainVal > ranges.rainfall.max)) {
-        const grp = document.getElementById('group-rainfall');
-        const errEl = document.getElementById('error-rainfall');
-        if (grp) grp.classList.add('has-error');
-        if (errEl) errEl.textContent = `Rainfall must be between ${ranges.rainfall.min} and ${ranges.rainfall.max} mm.`;
-        hasErrors = true;
+    const validSeasons = validCombos[formData.state][formData.crop] || [];
+    if (!validSeasons.includes(formData.season)) {
+      const grp = document.getElementById('group-season');
+      const errEl = document.getElementById('error-season');
+      if (grp) grp.classList.add('has-error');
+      if (errEl) errEl.textContent = `${formData.crop} in ${formData.state} is not grown in ${formData.season} season.`;
+      if (formErrorBanner) {
+        formErrorBanner.textContent = `Invalid season: ${formData.crop} in ${formData.state} is grown only in ${validSeasons.join(', ')}.`;
+        formErrorBanner.style.display = 'block';
       }
-
-      // Temperature check
-      const tempVal = parseFloat(formData.temperature);
-      if (ranges.temperature && (tempVal < ranges.temperature.min || tempVal > ranges.temperature.max)) {
-        const grp = document.getElementById('group-temperature');
-        const errEl = document.getElementById('error-temperature');
-        if (grp) grp.classList.add('has-error');
-        if (errEl) errEl.textContent = `Temperature must be between ${ranges.temperature.min} and ${ranges.temperature.max} °C.`;
-        hasErrors = true;
-      }
-
-      // Area check
-      const areaVal = parseFloat(formData.area);
-      if (ranges.area && (areaVal < ranges.area.min || areaVal > ranges.area.max)) {
-        const grp = document.getElementById('group-area');
-        const errEl = document.getElementById('error-area');
-        if (grp) grp.classList.add('has-error');
-        if (errEl) errEl.textContent = `Area must be between ${ranges.area.min} and ${ranges.area.max} ha.`;
-        hasErrors = true;
-      }
-
-      if (hasErrors) {
-        const firstError = form.querySelector('.has-error .form-control');
-        if (firstError) firstError.focus();
-        return;
-      }
+      return;
     }
 
-    // 4. Enter Loading State
+    // 3. Hard limits validation
+    const limits = appOptions.hard_limits || {
+      rainfall_min: 0,
+      rainfall_max: 5000,
+      temperature_min: -5,
+      temperature_max: 45,
+      area_min: 0.1,
+      area_max: 10000
+    };
+
+    const rainVal = parseFloat(formData.rainfall);
+    if (isNaN(rainVal) || rainVal < limits.rainfall_min || rainVal > limits.rainfall_max) {
+      const grp = document.getElementById('group-rainfall');
+      const errEl = document.getElementById('error-rainfall');
+      if (grp) grp.classList.add('has-error');
+      if (errEl) errEl.textContent = `Rainfall must be between ${limits.rainfall_min} and ${limits.rainfall_max} mm.`;
+      hasErrors = true;
+    }
+
+    const tempVal = parseFloat(formData.temperature);
+    if (isNaN(tempVal) || tempVal < limits.temperature_min || tempVal > limits.temperature_max) {
+      const grp = document.getElementById('group-temperature');
+      const errEl = document.getElementById('error-temperature');
+      if (grp) grp.classList.add('has-error');
+      if (errEl) errEl.textContent = `Temperature must be between ${limits.temperature_min} and ${limits.temperature_max} °C.`;
+      hasErrors = true;
+    }
+
+    const areaVal = parseFloat(formData.area);
+    if (isNaN(areaVal) || areaVal < limits.area_min || areaVal > limits.area_max) {
+      const grp = document.getElementById('group-area');
+      const errEl = document.getElementById('error-area');
+      if (grp) grp.classList.add('has-error');
+      if (errEl) errEl.textContent = `Area must be between ${limits.area_min} and ${limits.area_max} ha.`;
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      const firstError = form.querySelector('.has-error .form-control');
+      if (firstError) firstError.focus();
+      return;
+    }
+
+    // 4. Loading State
     predictBtn.classList.add('loading');
     predictBtn.disabled = true;
     const originalBtnText = predictBtn.querySelector('.btn-text').textContent;
@@ -605,15 +713,14 @@ function initFormValidation() {
 
     try {
       const payload = {
+        state: formData.state,
         crop: formData.crop,
         season: formData.season,
-        rainfall: parseFloat(formData.rainfall),
-        temperature: parseFloat(formData.temperature),
-        soil: formData.soil,
-        area: parseFloat(formData.area)
+        rainfall: rainVal,
+        temperature: tempVal,
+        area: areaVal
       };
 
-      // Real fetch() POST to Flask /predict endpoint
       const response = await fetch(`${API_BASE_URL}/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -622,7 +729,6 @@ function initFormValidation() {
 
       const responseData = await response.json().catch(() => ({}));
 
-      // Handle non-200 responses (e.g. 400 Bad Request)
       if (!response.ok) {
         const serverErrorMessage = responseData.error || `Server prediction error (${response.status})`;
         if (formErrorBanner) {
@@ -635,16 +741,15 @@ function initFormValidation() {
         return;
       }
 
-      // 5. Successful Prediction: update result panel with gentle fade-in
       if (formErrorBanner) {
         formErrorBanner.style.display = 'none';
       }
 
       const predictedYield = responseData.predicted_yield;
       const totalProduction = responseData.total_production;
-      const modelNote = responseData.note || 'This is an estimate based on historical district-level data.';
+      const modelNote = responseData.note || 'Estimate produced by state-aware agronomic HistGradientBoosting pipeline.';
 
-      document.getElementById('resultCropTag').textContent = `${payload.crop} • ${payload.season}`;
+      document.getElementById('resultCropTag').textContent = `${payload.crop} • ${payload.season} (${payload.state})`;
       document.getElementById('resultYieldValue').innerHTML = `${predictedYield.toFixed(2)} <span class="metric-unit">t/ha</span>`;
       document.getElementById('resultProductionValue').innerHTML = `${totalProduction.toFixed(2)} <span class="metric-unit">tonnes</span>`;
       document.getElementById('resultAreaNote').textContent = `Across ${payload.area} hectare${payload.area > 1 ? 's' : ''}`;
@@ -654,20 +759,28 @@ function initFormValidation() {
         analysisText.textContent = modelNote;
       }
 
+      // Display warnings as soft amber note if present
+      if (resultWarningBox && resultWarningText) {
+        if (Array.isArray(responseData.warnings) && responseData.warnings.length > 0) {
+          resultWarningText.innerHTML = responseData.warnings.join('<br>');
+          resultWarningBox.style.display = 'block';
+        } else {
+          resultWarningBox.style.display = 'none';
+          resultWarningText.innerHTML = '';
+        }
+      }
+
       resultPanel.classList.add('visible');
 
-      // 6. Update Hero Card with latest prediction
       if (heroYieldValue) {
         heroYieldValue.textContent = `${predictedYield.toFixed(2)} t/ha`;
       }
       if (heroYieldCaption) {
-        heroYieldCaption.textContent = 'Latest prediction';
+        heroYieldCaption.textContent = `${payload.crop} (${payload.state})`;
       }
 
-      // Also refresh the seasonal trends chart to match the predicted crop
-      loadSeasonalTrends(payload.crop);
+      loadSeasonalTrends(payload.crop, payload.state);
 
-      // Smooth scroll if result is below visible area on smaller screens
       if (window.innerWidth < 768) {
         resultPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
@@ -691,7 +804,7 @@ function initFormValidation() {
 }
 
 /* ==========================================================================
-   5. NAVIGATION & MOBILE DRAWER
+   6. NAVIGATION & MOBILE DRAWER
    ========================================================================== */
 
 function initNavigation() {

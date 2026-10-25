@@ -1,0 +1,133 @@
+{
+  "study": "AgriPredict AI Temporal Robustness and Rolling-Window Study",
+  "description": "Evaluation of variants B, C, and D across three rolling time windows.",
+  "hist_gradient_boosting_hyperparameters": {
+    "max_iter": 150,
+    "max_depth": null,
+    "learning_rate": 0.08,
+    "min_samples_leaf": 40,
+    "random_state": 42
+  },
+  "variants_spec": {
+    "B": "Variant B (Soil_Type, No Area)",
+    "C": "Variant C (State, No Soil_Type)",
+    "D": "Variant D (Crop x Season Baseline)"
+  },
+  "windows": [
+    {
+      "window": "2007-2009",
+      "train_years": "1997-2006",
+      "test_years": "2007-2009",
+      "train_rows": 82815,
+      "test_rows": 27007,
+      "variants": {
+        "B": {
+          "mae": 0.8996,
+          "r2_log": 0.8441,
+          "macro_crop_rel_mae_pct": 36.86
+        },
+        "C": {
+          "mae": 0.8277,
+          "r2_log": 0.8672,
+          "macro_crop_rel_mae_pct": 34.25
+        },
+        "D": {
+          "mae": 0.9747,
+          "r2_log": 0.822,
+          "macro_crop_rel_mae_pct": 48.67
+        }
+      }
+    },
+    {
+      "window": "2010-2012",
+      "train_years": "1997-2009",
+      "test_years": "2010-2012",
+      "train_rows": 109822,
+      "test_rows": 28173,
+      "variants": {
+        "B": {
+          "mae": 0.809,
+          "r2_log": 0.8692,
+          "macro_crop_rel_mae_pct": 32.67
+        },
+        "C": {
+          "mae": 0.7518,
+          "r2_log": 0.8952,
+          "macro_crop_rel_mae_pct": 28.74
+        },
+        "D": {
+          "mae": 0.8891,
+          "r2_log": 0.8428,
+          "macro_crop_rel_mae_pct": 36.01
+        }
+      }
+    },
+    {
+      "window": "2013-2015",
+      "train_years": "1997-2012",
+      "test_years": "2013-2015",
+      "train_rows": 137995,
+      "test_rows": 16817,
+      "variants": {
+        "B": {
+          "mae": 0.8947,
+          "r2_log": 0.896,
+          "macro_crop_rel_mae_pct": 32.11
+        },
+        "C": {
+          "mae": 0.8151,
+          "r2_log": 0.9123,
+          "macro_crop_rel_mae_pct": 28.53
+        },
+        "D": {
+          "mae": 0.9893,
+          "r2_log": 0.8691,
+          "macro_crop_rel_mae_pct": 35.06
+        }
+      }
+    }
+  ],
+  "mean_over_windows": {
+    "B": {
+      "mean_mae": 0.8678,
+      "mean_r2_log": 0.8698,
+      "mean_macro_crop_rel_mae_pct": 33.88
+    },
+    "C": {
+      "mean_mae": 0.7982,
+      "mean_r2_log": 0.8916,
+      "mean_macro_crop_rel_mae_pct": 30.51
+    },
+    "D": {
+      "mean_mae": 0.951,
+      "mean_r2_log": 0.8446,
+      "mean_macro_crop_rel_mae_pct": 39.91
+    }
+  },
+  "variant_c_unseen_state_crop_statistics": [
+    {
+      "window": "2007-2009",
+      "train_years": "1997-2006",
+      "test_years": "2007-2009",
+      "total_test_rows": 27007,
+      "unseen_state_crop_rows": 1085,
+      "unseen_state_crop_pct": 4.02
+    },
+    {
+      "window": "2010-2012",
+      "train_years": "1997-2009",
+      "test_years": "2010-2012",
+      "total_test_rows": 28173,
+      "unseen_state_crop_rows": 583,
+      "unseen_state_crop_pct": 2.07
+    },
+    {
+      "window": "2013-2015",
+      "train_years": "1997-2012",
+      "test_years": "2013-2015",
+      "total_test_rows": 16817,
+      "unseen_state_crop_rows": 85,
+      "unseen_state_crop_pct": 0.51
+    }
+  ]
+}

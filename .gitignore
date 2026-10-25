@@ -13,3 +13,10 @@ models/*.png
 # Ensure production model artifacts are tracked
 !models/best_model.joblib
 !models/metadata.json
+
+backup_before_state_model/
+models_backup_before_weather_fix/
+scratch/
+weather_cache_before.csv
+test_env/
+*.zip

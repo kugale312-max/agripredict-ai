@@ -1,364 +1,4747 @@
 {
-  "project": "AgriPredict AI",
-  "description": "Metadata specification for frontend form validation, parameter ranges, and API model serving.",
-  "valid_crops": [
-    "Arhar/Tur",
-    "Bajra",
-    "Banana",
-    "Barley",
-    "Castor seed",
-    "Coriander",
-    "Cowpea(Lobia)",
-    "Dry chillies",
-    "Dry ginger",
-    "Garlic",
-    "Gram",
-    "Groundnut",
-    "Guar seed",
-    "Horse-gram",
-    "Jowar",
-    "Khesari",
-    "Linseed",
-    "Maize",
-    "Masoor",
-    "Moong(Green Gram)",
-    "Moth",
-    "Niger seed",
-    "Onion",
-    "Peas & beans (Pulses)",
-    "Potato",
-    "Ragi",
-    "Rapeseed &Mustard",
-    "Rice",
-    "Safflower",
-    "Sesamum",
-    "Small millets",
-    "Soyabean",
-    "Sugarcane",
-    "Sunflower",
-    "Sweet potato",
-    "Tapioca",
-    "Tobacco",
-    "Turmeric",
-    "Urad",
-    "Wheat"
+  "model_name": "HistGradientBoostingRegressor (State-Aware)",
+  "features": [
+    "Crop",
+    "Season",
+    "Rainfall_mm",
+    "Temperature_C",
+    "State"
   ],
-  "valid_seasons": [
-    "Kharif",
-    "Rabi",
-    "Zaid"
-  ],
-  "valid_soil_types": [
-    "Alluvial",
-    "Black",
-    "Loamy",
-    "Red",
-    "Sandy"
-  ],
-  "valid_crop_seasons": {
-    "Arhar/Tur": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Bajra": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Banana": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Barley": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Castor seed": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Coriander": [
-      "Rabi"
-    ],
-    "Cowpea(Lobia)": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Dry chillies": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Dry ginger": [
-      "Kharif"
-    ],
-    "Garlic": [
-      "Rabi"
-    ],
-    "Gram": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Groundnut": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Guar seed": [
-      "Kharif"
-    ],
-    "Horse-gram": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Jowar": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Khesari": [
-      "Rabi"
-    ],
-    "Linseed": [
-      "Rabi"
-    ],
-    "Maize": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Masoor": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Moong(Green Gram)": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Moth": [
-      "Kharif"
-    ],
-    "Niger seed": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Onion": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Peas & beans (Pulses)": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Potato": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Ragi": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Rapeseed &Mustard": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Rice": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Safflower": [
-      "Rabi"
-    ],
-    "Sesamum": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Small millets": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Soyabean": [
-      "Kharif"
-    ],
-    "Sugarcane": [
-      "Kharif"
-    ],
-    "Sunflower": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Sweet potato": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Tapioca": [
-      "Kharif"
-    ],
-    "Tobacco": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Turmeric": [
-      "Kharif",
-      "Rabi"
-    ],
-    "Urad": [
-      "Kharif",
-      "Rabi",
-      "Zaid"
-    ],
-    "Wheat": [
-      "Rabi",
-      "Zaid"
-    ]
+  "trained_on": "1997-2015",
+  "total_training_samples": 154812,
+  "hard_limits": {
+    "rainfall_min": 0.0,
+    "rainfall_max": 5000.0,
+    "temperature_min": -5.0,
+    "temperature_max": 45.0,
+    "area_min": 0.1,
+    "area_max": 10000.0
   },
-  "input_ranges": {
-    "Rainfall_mm": {
-      "p01": 4.51,
-      "p99": 1754.85,
-      "min": 0.0,
-      "max": 3243.81,
-      "mean": 483.03,
-      "median": 355.37
+  "validation_metrics": {
+    "evaluation_strategy": "Temporal Rolling Window Holdout (Strict Future Holdout, NOT in-sample)",
+    "mean_over_three_rolling_windows_2007_2015": {
+      "model_variant_C": {
+        "description": "HistGradientBoosting (State-aware, no Soil Type, no Area)",
+        "mae": 0.7982,
+        "r2_log": 0.8916,
+        "macro_crop_rel_mae_pct": 30.51
+      },
+      "baseline_variant_D": {
+        "description": "Historical Crop x Season Mean Baseline",
+        "mae": 0.951,
+        "r2_log": 0.8446,
+        "macro_crop_rel_mae_pct": 39.91
+      }
     },
-    "Temperature_C": {
-      "p01": 11.96,
-      "p99": 32.39,
-      "min": -13.25,
-      "max": 33.42,
-      "mean": 24.83,
-      "median": 25.61
-    },
-    "Area_ha": {
-      "p01": 1.0,
-      "p99": 197651.58,
-      "min": 0.1,
-      "max": 1020181.0,
-      "mean": 13711.6,
-      "median": 889.0
+    "latest_window_2013_2015": {
+      "model_variant_C": {
+        "description": "HistGradientBoosting (State-aware, no Soil Type, no Area)",
+        "mae": 0.8151,
+        "r2_log": 0.9123,
+        "macro_crop_rel_mae_pct": 28.53
+      },
+      "baseline_variant_D": {
+        "description": "Historical Crop x Season Mean Baseline",
+        "mae": 0.9893,
+        "r2_log": 0.8691,
+        "macro_crop_rel_mae_pct": 35.06
+      }
     }
   },
-  "average_yield_per_crop_season": {
-    "Arhar/Tur__Kharif": 0.7814,
-    "Arhar/Tur__Rabi": 0.8424,
-    "Bajra__Kharif": 1.0715,
-    "Bajra__Rabi": 1.2409,
-    "Bajra__Zaid": 2.1023,
-    "Banana__Kharif": 19.7344,
-    "Banana__Rabi": 13.8811,
-    "Banana__Zaid": 41.3514,
-    "Barley__Kharif": 1.7467,
-    "Barley__Rabi": 1.8157,
-    "Castor seed__Kharif": 0.686,
-    "Castor seed__Rabi": 0.5388,
-    "Coriander__Rabi": 0.5388,
-    "Cowpea(Lobia)__Kharif": 0.4506,
-    "Cowpea(Lobia)__Rabi": 0.52,
-    "Cowpea(Lobia)__Zaid": 0.379,
-    "Dry chillies__Kharif": 1.447,
-    "Dry chillies__Rabi": 2.1303,
-    "Dry chillies__Zaid": 2.9617,
-    "Dry ginger__Kharif": 4.1404,
-    "Garlic__Rabi": 4.6491,
-    "Gram__Kharif": 0.5244,
-    "Gram__Rabi": 0.8255,
-    "Groundnut__Kharif": 1.042,
-    "Groundnut__Rabi": 1.455,
-    "Groundnut__Zaid": 1.4389,
-    "Guar seed__Kharif": 0.838,
-    "Horse-gram__Kharif": 0.4953,
-    "Horse-gram__Rabi": 0.4139,
-    "Horse-gram__Zaid": 0.2537,
-    "Jowar__Kharif": 0.9987,
-    "Jowar__Rabi": 0.944,
-    "Jowar__Zaid": 1.8911,
-    "Khesari__Rabi": 0.7793,
-    "Linseed__Rabi": 0.5093,
-    "Maize__Kharif": 1.766,
-    "Maize__Rabi": 2.8602,
-    "Maize__Zaid": 2.2639,
-    "Masoor__Kharif": 0.4781,
-    "Masoor__Rabi": 0.6951,
-    "Moong(Green Gram)__Kharif": 0.4262,
-    "Moong(Green Gram)__Rabi": 0.4374,
-    "Moong(Green Gram)__Zaid": 0.5558,
-    "Moth__Kharif": 0.3701,
-    "Niger seed__Kharif": 0.336,
-    "Niger seed__Rabi": 0.3691,
-    "Onion__Kharif": 10.0166,
-    "Onion__Rabi": 15.5932,
-    "Onion__Zaid": 11.3319,
-    "Peas & beans (Pulses)__Kharif": 2.0463,
-    "Peas & beans (Pulses)__Rabi": 1.0185,
-    "Peas & beans (Pulses)__Zaid": 6.4538,
-    "Potato__Kharif": 8.6415,
-    "Potato__Rabi": 16.3735,
-    "Potato__Zaid": 14.5882,
-    "Ragi__Kharif": 1.1168,
-    "Ragi__Rabi": 1.5816,
-    "Ragi__Zaid": 1.4769,
-    "Rapeseed &Mustard__Kharif": 0.3345,
-    "Rapeseed &Mustard__Rabi": 0.7915,
-    "Rice__Kharif": 1.9586,
-    "Rice__Rabi": 2.6178,
-    "Rice__Zaid": 2.2944,
-    "Safflower__Rabi": 0.5338,
-    "Sesamum__Kharif": 0.3751,
-    "Sesamum__Rabi": 0.3271,
-    "Sesamum__Zaid": 0.4467,
-    "Small millets__Kharif": 0.6164,
-    "Small millets__Rabi": 0.7454,
-    "Soyabean__Kharif": 1.0152,
-    "Sugarcane__Kharif": 55.7603,
-    "Sunflower__Kharif": 0.8185,
-    "Sunflower__Rabi": 0.851,
-    "Sunflower__Zaid": 1.1761,
-    "Sweet potato__Kharif": 11.8181,
-    "Sweet potato__Rabi": 6.6802,
-    "Tapioca__Kharif": 12.4858,
-    "Tobacco__Kharif": 1.195,
-    "Tobacco__Rabi": 3.4797,
-    "Tobacco__Zaid": 3.0508,
-    "Turmeric__Kharif": 3.2314,
-    "Turmeric__Rabi": 3.0776,
-    "Urad__Kharif": 0.4958,
-    "Urad__Rabi": 0.4934,
-    "Urad__Zaid": 0.5311,
-    "Wheat__Rabi": 2.0942,
-    "Wheat__Zaid": 1.3505
+  "states": [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jammu and Kashmir",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Puducherry",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal"
+  ],
+  "valid_combos": {
+    "Andhra Pradesh": {
+      "Arhar/Tur": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Bajra": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Cowpea(Lobia)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Dry chillies": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Horse-gram": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Jowar": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Niger seed": [
+        "Kharif"
+      ],
+      "Onion": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Safflower": [
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Small millets": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sugarcane": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Sweet potato": [
+        "Rabi"
+      ],
+      "Tobacco": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Turmeric": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Arunachal Pradesh": {
+      "Groundnut": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Assam": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Banana": [
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Dry chillies": [
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Rabi"
+      ],
+      "Niger seed": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Zaid"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Sugarcane": [
+        "Kharif"
+      ],
+      "Sweet potato": [
+        "Rabi"
+      ],
+      "Tapioca": [
+        "Kharif"
+      ],
+      "Tobacco": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Bihar": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Horse-gram": [
+        "Kharif"
+      ],
+      "Jowar": [
+        "Kharif"
+      ],
+      "Khesari": [
+        "Rabi"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Potato": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Safflower": [
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Sweet potato": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Chhattisgarh": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Horse-gram": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Jowar": [
+        "Kharif"
+      ],
+      "Khesari": [
+        "Rabi"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Niger seed": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Potato": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Safflower": [
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Goa": {
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rice": [
+        "Kharif"
+      ]
+    },
+    "Gujarat": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Jowar": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Moth": [
+        "Kharif"
+      ],
+      "Onion": [
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Sesamum": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Small millets": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Tobacco": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Urad": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Haryana": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Jowar": [
+        "Kharif"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif"
+      ],
+      "Moth": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Rabi"
+      ],
+      "Urad": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Himachal Pradesh": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Coriander": [
+        "Rabi"
+      ],
+      "Dry chillies": [
+        "Kharif"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Garlic": [
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Horse-gram": [
+        "Kharif"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif"
+      ],
+      "Onion": [
+        "Rabi"
+      ],
+      "Peas & beans (Pulses)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Potato": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Turmeric": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Jammu and Kashmir": {
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Dry chillies": [
+        "Kharif"
+      ],
+      "Garlic": [
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif"
+      ],
+      "Onion": [
+        "Rabi"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Potato": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Jharkhand": {
+      "Arhar/Tur": [
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Onion": [
+        "Rabi"
+      ],
+      "Potato": [
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Karnataka": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Cowpea(Lobia)": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Dry chillies": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Horse-gram": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Jowar": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Niger seed": [
+        "Kharif"
+      ],
+      "Onion": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Peas & beans (Pulses)": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Potato": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Ragi": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Rapeseed &Mustard": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Safflower": [
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Kerala": {
+      "Jowar": [
+        "Kharif"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rice": [
+        "Zaid"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ]
+    },
+    "Madhya Pradesh": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Cowpea(Lobia)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Horse-gram": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Jowar": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Khesari": [
+        "Rabi"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Niger seed": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Safflower": [
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Maharashtra": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Jowar": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif"
+      ],
+      "Niger seed": [
+        "Kharif"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Safflower": [
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Small millets": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Soyabean": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Sugarcane": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Urad": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Manipur": {
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ]
+    },
+    "Meghalaya": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Banana": [
+        "Kharif"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sweet potato": [
+        "Kharif"
+      ],
+      "Tapioca": [
+        "Kharif"
+      ],
+      "Tobacco": [
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Mizoram": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Potato": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Tapioca": [
+        "Kharif"
+      ]
+    },
+    "Nagaland": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Horse-gram": [
+        "Kharif"
+      ],
+      "Jowar": [
+        "Kharif"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Potato": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sugarcane": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Sweet potato": [
+        "Kharif"
+      ],
+      "Tapioca": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Odisha": {
+      "Arhar/Tur": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Castor seed": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Coriander": [
+        "Rabi"
+      ],
+      "Dry chillies": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Garlic": [
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Horse-gram": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Jowar": [
+        "Kharif"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Niger seed": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Safflower": [
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Sweet potato": [
+        "Kharif"
+      ],
+      "Turmeric": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Wheat": [
+        "Rabi",
+        "Zaid"
+      ]
+    },
+    "Puducherry": {
+      "Banana": [
+        "Kharif"
+      ],
+      "Moong(Green Gram)": [
+        "Rabi",
+        "Zaid"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rice": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Urad": [
+        "Rabi",
+        "Zaid"
+      ]
+    },
+    "Punjab": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Guar seed": [
+        "Kharif"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Rajasthan": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Jowar": [
+        "Kharif"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif"
+      ],
+      "Moth": [
+        "Kharif"
+      ],
+      "Onion": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sugarcane": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Sikkim": {
+      "Barley": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Tamil Nadu": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Banana": [
+        "Kharif"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Horse-gram": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Jowar": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Onion": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi"
+      ]
+    },
+    "Telangana": {
+      "Arhar/Tur": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Bajra": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Cowpea(Lobia)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Dry chillies": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Horse-gram": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Jowar": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Onion": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Safflower": [
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sugarcane": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Tripura": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Uttar Pradesh": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Banana": [
+        "Zaid"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Castor seed": [
+        "Kharif"
+      ],
+      "Coriander": [
+        "Rabi"
+      ],
+      "Dry chillies": [
+        "Kharif"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Garlic": [
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Guar seed": [
+        "Kharif"
+      ],
+      "Jowar": [
+        "Kharif"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Moth": [
+        "Kharif"
+      ],
+      "Onion": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Potato": [
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sugarcane": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Sweet potato": [
+        "Kharif"
+      ],
+      "Tobacco": [
+        "Rabi",
+        "Zaid"
+      ],
+      "Turmeric": [
+        "Rabi"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "Uttarakhand": {
+      "Arhar/Tur": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif"
+      ],
+      "Horse-gram": [
+        "Kharif"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif"
+      ],
+      "Moth": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Potato": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Sesamum": [
+        "Kharif"
+      ],
+      "Small millets": [
+        "Kharif"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif",
+        "Zaid"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    },
+    "West Bengal": {
+      "Arhar/Tur": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Bajra": [
+        "Kharif"
+      ],
+      "Barley": [
+        "Rabi"
+      ],
+      "Dry chillies": [
+        "Rabi"
+      ],
+      "Dry ginger": [
+        "Kharif"
+      ],
+      "Gram": [
+        "Rabi"
+      ],
+      "Groundnut": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Horse-gram": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Jowar": [
+        "Kharif"
+      ],
+      "Khesari": [
+        "Rabi"
+      ],
+      "Linseed": [
+        "Rabi"
+      ],
+      "Maize": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Masoor": [
+        "Rabi"
+      ],
+      "Moong(Green Gram)": [
+        "Kharif",
+        "Rabi",
+        "Zaid"
+      ],
+      "Niger seed": [
+        "Kharif"
+      ],
+      "Peas & beans (Pulses)": [
+        "Rabi"
+      ],
+      "Potato": [
+        "Rabi"
+      ],
+      "Ragi": [
+        "Kharif"
+      ],
+      "Rapeseed &Mustard": [
+        "Rabi"
+      ],
+      "Rice": [
+        "Zaid"
+      ],
+      "Safflower": [
+        "Rabi"
+      ],
+      "Sesamum": [
+        "Zaid"
+      ],
+      "Small millets": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Soyabean": [
+        "Kharif"
+      ],
+      "Sunflower": [
+        "Kharif"
+      ],
+      "Urad": [
+        "Kharif",
+        "Rabi"
+      ],
+      "Wheat": [
+        "Rabi"
+      ]
+    }
   },
-  "best_model": {
-    "architecture": "HistGradientBoosting",
-    "hyperparameters": {
-      "regressor__regressor__min_samples_leaf": 40,
-      "regressor__regressor__max_iter": 150,
-      "regressor__regressor__max_depth": null,
-      "regressor__regressor__learning_rate": 0.08
+  "total_valid_combos": 730,
+  "typical_weather": {
+    "Andaman and Nicobar Islands": {
+      "Kharif": {
+        "rain_mean": 1643.5,
+        "rain_min": 1374.6,
+        "rain_max": 2313.8,
+        "temp_mean": 27.9,
+        "temp_min": 27.6,
+        "temp_max": 28.1
+      },
+      "Rabi": {
+        "rain_mean": 979.5,
+        "rain_min": 979.5,
+        "rain_max": 979.5,
+        "temp_mean": 27.3,
+        "temp_min": 27.3,
+        "temp_max": 27.3
+      }
     },
-    "cv_score_r2_log": 0.8873,
-    "time_based_metrics": {
-      "R2": 0.8935,
-      "R2_log": 0.8989,
-      "MAE": 0.8661,
-      "RMSE": 2.7276
+    "Andhra Pradesh": {
+      "Kharif": {
+        "rain_mean": 675.1,
+        "rain_min": 416.5,
+        "rain_max": 931.1,
+        "temp_mean": 28.7,
+        "temp_min": 27.6,
+        "temp_max": 29.6
+      },
+      "Rabi": {
+        "rain_mean": 139.9,
+        "rain_min": 59.3,
+        "rain_max": 312.7,
+        "temp_mean": 25.5,
+        "temp_min": 24.2,
+        "temp_max": 26.5
+      }
     },
-    "random_split_metrics": {
-      "R2": 0.9261,
-      "R2_log": 0.8929,
-      "MAE": 0.5298,
-      "RMSE": 1.601
+    "Arunachal Pradesh": {
+      "Kharif": {
+        "rain_mean": 1379.7,
+        "rain_min": 1011.4,
+        "rain_max": 1927.1,
+        "temp_mean": 25.3,
+        "temp_min": 24.6,
+        "temp_max": 25.9
+      },
+      "Rabi": {
+        "rain_mean": 144.6,
+        "rain_min": 57.0,
+        "rain_max": 240.0,
+        "temp_mean": 16.2,
+        "temp_min": 15.2,
+        "temp_max": 17.5
+      }
+    },
+    "Assam": {
+      "Kharif": {
+        "rain_mean": 1289.0,
+        "rain_min": 995.4,
+        "rain_max": 1588.2,
+        "temp_mean": 27.4,
+        "temp_min": 26.7,
+        "temp_max": 27.9
+      },
+      "Rabi": {
+        "rain_mean": 110.9,
+        "rain_min": 30.5,
+        "rain_max": 234.9,
+        "temp_mean": 18.5,
+        "temp_min": 17.8,
+        "temp_max": 20.2
+      },
+      "Zaid": {
+        "rain_mean": 795.7,
+        "rain_min": 554.6,
+        "rain_max": 1229.5,
+        "temp_mean": 26.2,
+        "temp_min": 25.8,
+        "temp_max": 27.5
+      }
+    },
+    "Bihar": {
+      "Kharif": {
+        "rain_mean": 921.9,
+        "rain_min": 689.9,
+        "rain_max": 1206.1,
+        "temp_mean": 29.0,
+        "temp_min": 28.1,
+        "temp_max": 30.0
+      },
+      "Rabi": {
+        "rain_mean": 43.0,
+        "rain_min": 7.2,
+        "rain_max": 110.4,
+        "temp_mean": 19.6,
+        "temp_min": 17.6,
+        "temp_max": 20.9
+      },
+      "Zaid": {
+        "rain_mean": 239.9,
+        "rain_min": 103.6,
+        "rain_max": 492.1,
+        "temp_mean": 31.4,
+        "temp_min": 30.2,
+        "temp_max": 33.0
+      }
+    },
+    "Chandigarh": {
+      "Kharif": {
+        "rain_mean": 778.5,
+        "rain_min": 486.1,
+        "rain_max": 1266.1,
+        "temp_mean": 29.0,
+        "temp_min": 26.8,
+        "temp_max": 30.3
+      },
+      "Rabi": {
+        "rain_mean": 88.3,
+        "rain_min": 27.9,
+        "rain_max": 216.6,
+        "temp_mean": 17.5,
+        "temp_min": 16.3,
+        "temp_max": 18.1
+      }
+    },
+    "Chhattisgarh": {
+      "Kharif": {
+        "rain_mean": 1141.1,
+        "rain_min": 739.2,
+        "rain_max": 1580.5,
+        "temp_mean": 27.4,
+        "temp_min": 26.6,
+        "temp_max": 28.2
+      },
+      "Rabi": {
+        "rain_mean": 63.5,
+        "rain_min": 11.4,
+        "rain_max": 98.8,
+        "temp_mean": 21.7,
+        "temp_min": 20.4,
+        "temp_max": 23.2
+      },
+      "Zaid": {
+        "rain_mean": 397.4,
+        "rain_min": 397.4,
+        "rain_max": 397.4,
+        "temp_mean": 31.9,
+        "temp_min": 31.9,
+        "temp_max": 31.9
+      }
+    },
+    "Dadra and Nagar Haveli": {
+      "Kharif": {
+        "rain_mean": 2173.7,
+        "rain_min": 1297.9,
+        "rain_max": 3243.8,
+        "temp_mean": 26.3,
+        "temp_min": 25.8,
+        "temp_max": 26.9
+      },
+      "Rabi": {
+        "rain_mean": 23.1,
+        "rain_min": 0.0,
+        "rain_max": 77.7,
+        "temp_mean": 25.1,
+        "temp_min": 24.4,
+        "temp_max": 26.1
+      }
+    },
+    "Goa": {
+      "Kharif": {
+        "rain_mean": 2028.0,
+        "rain_min": 1341.0,
+        "rain_max": 2528.3,
+        "temp_mean": 27.0,
+        "temp_min": 26.7,
+        "temp_max": 27.3
+      },
+      "Rabi": {
+        "rain_mean": 70.3,
+        "rain_min": 6.8,
+        "rain_max": 133.8,
+        "temp_mean": 27.1,
+        "temp_min": 26.5,
+        "temp_max": 27.5
+      }
+    },
+    "Gujarat": {
+      "Kharif": {
+        "rain_mean": 651.9,
+        "rain_min": 301.4,
+        "rain_max": 1129.8,
+        "temp_mean": 28.8,
+        "temp_min": 27.9,
+        "temp_max": 30.1
+      },
+      "Rabi": {
+        "rain_mean": 11.4,
+        "rain_min": 0.0,
+        "rain_max": 84.1,
+        "temp_mean": 23.1,
+        "temp_min": 21.6,
+        "temp_max": 23.9
+      },
+      "Zaid": {
+        "rain_mean": 128.1,
+        "rain_min": 10.7,
+        "rain_max": 375.2,
+        "temp_mean": 31.0,
+        "temp_min": 29.9,
+        "temp_max": 32.0
+      }
+    },
+    "Haryana": {
+      "Kharif": {
+        "rain_mean": 421.5,
+        "rain_min": 191.2,
+        "rain_max": 639.9,
+        "temp_mean": 31.3,
+        "temp_min": 29.7,
+        "temp_max": 33.4
+      },
+      "Rabi": {
+        "rain_mean": 57.2,
+        "rain_min": 10.7,
+        "rain_max": 136.9,
+        "temp_mean": 18.1,
+        "temp_min": 16.4,
+        "temp_max": 19.0
+      }
+    },
+    "Himachal Pradesh": {
+      "Kharif": {
+        "rain_mean": 716.7,
+        "rain_min": 470.2,
+        "rain_max": 1272.4,
+        "temp_mean": 26.1,
+        "temp_min": 24.3,
+        "temp_max": 27.0
+      },
+      "Rabi": {
+        "rain_mean": 113.6,
+        "rain_min": 49.1,
+        "rain_max": 262.9,
+        "temp_mean": 14.5,
+        "temp_min": 13.6,
+        "temp_max": 15.3
+      }
+    },
+    "Jammu and Kashmir": {
+      "Kharif": {
+        "rain_mean": 324.6,
+        "rain_min": 139.0,
+        "rain_max": 520.7,
+        "temp_mean": 21.2,
+        "temp_min": 20.7,
+        "temp_max": 22.3
+      },
+      "Rabi": {
+        "rain_mean": 179.1,
+        "rain_min": 70.6,
+        "rain_max": 312.7,
+        "temp_mean": 7.2,
+        "temp_min": 6.4,
+        "temp_max": 8.1
+      }
+    },
+    "Jharkhand": {
+      "Kharif": {
+        "rain_mean": 1099.7,
+        "rain_min": 1099.7,
+        "rain_max": 1099.7,
+        "temp_mean": 27.3,
+        "temp_min": 27.3,
+        "temp_max": 27.3
+      },
+      "Rabi": {
+        "rain_mean": 57.8,
+        "rain_min": 29.2,
+        "rain_max": 77.7,
+        "temp_mean": 19.0,
+        "temp_min": 18.2,
+        "temp_max": 19.8
+      }
+    },
+    "Karnataka": {
+      "Kharif": {
+        "rain_mean": 493.9,
+        "rain_min": 306.8,
+        "rain_max": 759.2,
+        "temp_mean": 24.9,
+        "temp_min": 24.3,
+        "temp_max": 25.7
+      },
+      "Rabi": {
+        "rain_mean": 59.2,
+        "rain_min": 8.0,
+        "rain_max": 179.2,
+        "temp_mean": 24.4,
+        "temp_min": 23.2,
+        "temp_max": 25.4
+      },
+      "Zaid": {
+        "rain_mean": 201.3,
+        "rain_min": 87.9,
+        "rain_max": 311.9,
+        "temp_mean": 28.7,
+        "temp_min": 27.0,
+        "temp_max": 30.0
+      }
+    },
+    "Kerala": {
+      "Kharif": {
+        "rain_mean": 1537.3,
+        "rain_min": 1149.9,
+        "rain_max": 2304.9,
+        "temp_mean": 24.1,
+        "temp_min": 23.8,
+        "temp_max": 24.4
+      },
+      "Zaid": {
+        "rain_mean": 733.1,
+        "rain_min": 491.4,
+        "rain_max": 1058.9,
+        "temp_mean": 26.8,
+        "temp_min": 25.7,
+        "temp_max": 28.1
+      }
+    },
+    "Madhya Pradesh": {
+      "Kharif": {
+        "rain_mean": 1207.6,
+        "rain_min": 929.8,
+        "rain_max": 1702.8,
+        "temp_mean": 27.1,
+        "temp_min": 26.4,
+        "temp_max": 27.9
+      },
+      "Rabi": {
+        "rain_mean": 66.5,
+        "rain_min": 4.5,
+        "rain_max": 229.7,
+        "temp_mean": 21.4,
+        "temp_min": 19.9,
+        "temp_max": 22.6
+      }
+    },
+    "Maharashtra": {
+      "Kharif": {
+        "rain_mean": 700.4,
+        "rain_min": 529.9,
+        "rain_max": 1041.3,
+        "temp_mean": 25.6,
+        "temp_min": 24.8,
+        "temp_max": 26.6
+      },
+      "Rabi": {
+        "rain_mean": 53.9,
+        "rain_min": 1.2,
+        "rain_max": 161.4,
+        "temp_mean": 23.0,
+        "temp_min": 21.6,
+        "temp_max": 24.3
+      },
+      "Zaid": {
+        "rain_mean": 181.9,
+        "rain_min": 83.2,
+        "rain_max": 284.1,
+        "temp_mean": 30.0,
+        "temp_min": 29.1,
+        "temp_max": 30.8
+      }
+    },
+    "Manipur": {
+      "Kharif": {
+        "rain_mean": 617.4,
+        "rain_min": 438.3,
+        "rain_max": 791.7,
+        "temp_mean": 24.3,
+        "temp_min": 23.4,
+        "temp_max": 25.1
+      },
+      "Rabi": {
+        "rain_mean": 91.9,
+        "rain_min": 49.4,
+        "rain_max": 148.1,
+        "temp_mean": 17.6,
+        "temp_min": 17.0,
+        "temp_max": 18.8
+      },
+      "Zaid": {
+        "rain_mean": 417.0,
+        "rain_min": 415.9,
+        "rain_max": 418.0,
+        "temp_mean": 23.6,
+        "temp_min": 23.4,
+        "temp_max": 23.8
+      }
+    },
+    "Meghalaya": {
+      "Kharif": {
+        "rain_mean": 1787.2,
+        "rain_min": 1441.7,
+        "rain_max": 2093.5,
+        "temp_mean": 22.5,
+        "temp_min": 22.0,
+        "temp_max": 22.9
+      },
+      "Rabi": {
+        "rain_mean": 124.2,
+        "rain_min": 40.1,
+        "rain_max": 352.9,
+        "temp_mean": 14.6,
+        "temp_min": 13.7,
+        "temp_max": 15.5
+      },
+      "Zaid": {
+        "rain_mean": 1013.1,
+        "rain_min": 849.0,
+        "rain_max": 1191.6,
+        "temp_mean": 21.1,
+        "temp_min": 20.8,
+        "temp_max": 21.5
+      }
+    },
+    "Mizoram": {
+      "Kharif": {
+        "rain_mean": 1016.9,
+        "rain_min": 789.1,
+        "rain_max": 1390.2,
+        "temp_mean": 24.9,
+        "temp_min": 24.3,
+        "temp_max": 25.5
+      },
+      "Rabi": {
+        "rain_mean": 90.8,
+        "rain_min": 29.9,
+        "rain_max": 176.8,
+        "temp_mean": 19.2,
+        "temp_min": 18.4,
+        "temp_max": 20.5
+      }
+    },
+    "Nagaland": {
+      "Kharif": {
+        "rain_mean": 900.3,
+        "rain_min": 558.9,
+        "rain_max": 1274.3,
+        "temp_mean": 24.8,
+        "temp_min": 24.1,
+        "temp_max": 25.4
+      },
+      "Rabi": {
+        "rain_mean": 102.0,
+        "rain_min": 36.3,
+        "rain_max": 173.8,
+        "temp_mean": 16.6,
+        "temp_min": 15.6,
+        "temp_max": 17.9
+      }
+    },
+    "Odisha": {
+      "Kharif": {
+        "rain_mean": 1243.1,
+        "rain_min": 857.0,
+        "rain_max": 1638.7,
+        "temp_mean": 27.0,
+        "temp_min": 26.6,
+        "temp_max": 27.5
+      },
+      "Rabi": {
+        "rain_mean": 85.6,
+        "rain_min": 44.4,
+        "rain_max": 199.6,
+        "temp_mean": 22.2,
+        "temp_min": 21.0,
+        "temp_max": 23.5
+      },
+      "Zaid": {
+        "rain_mean": 335.1,
+        "rain_min": 175.7,
+        "rain_max": 530.2,
+        "temp_mean": 31.2,
+        "temp_min": 30.3,
+        "temp_max": 32.2
+      }
+    },
+    "Puducherry": {
+      "Kharif": {
+        "rain_mean": 590.5,
+        "rain_min": 352.6,
+        "rain_max": 750.9,
+        "temp_mean": 29.1,
+        "temp_min": 28.5,
+        "temp_max": 29.6
+      },
+      "Rabi": {
+        "rain_mean": 434.2,
+        "rain_min": 181.0,
+        "rain_max": 824.6,
+        "temp_mean": 26.1,
+        "temp_min": 25.6,
+        "temp_max": 26.4
+      },
+      "Zaid": {
+        "rain_mean": 180.7,
+        "rain_min": 90.2,
+        "rain_max": 348.6,
+        "temp_mean": 29.5,
+        "temp_min": 28.9,
+        "temp_max": 30.2
+      }
+    },
+    "Punjab": {
+      "Kharif": {
+        "rain_mean": 441.1,
+        "rain_min": 283.8,
+        "rain_max": 792.8,
+        "temp_mean": 31.5,
+        "temp_min": 29.3,
+        "temp_max": 32.9
+      },
+      "Rabi": {
+        "rain_mean": 84.1,
+        "rain_min": 25.4,
+        "rain_max": 205.6,
+        "temp_mean": 17.1,
+        "temp_min": 15.8,
+        "temp_max": 18.1
+      }
+    },
+    "Rajasthan": {
+      "Kharif": {
+        "rain_mean": 323.5,
+        "rain_min": 83.7,
+        "rain_max": 517.9,
+        "temp_mean": 30.7,
+        "temp_min": 29.4,
+        "temp_max": 33.0
+      },
+      "Rabi": {
+        "rain_mean": 26.5,
+        "rain_min": 4.3,
+        "rain_max": 77.2,
+        "temp_mean": 19.2,
+        "temp_min": 17.4,
+        "temp_max": 20.4
+      }
+    },
+    "Sikkim": {
+      "Kharif": {
+        "rain_mean": 873.7,
+        "rain_min": 607.3,
+        "rain_max": 1200.0,
+        "temp_mean": 14.5,
+        "temp_min": 14.1,
+        "temp_max": 15.0
+      },
+      "Rabi": {
+        "rain_mean": 36.3,
+        "rain_min": 13.5,
+        "rain_max": 72.2,
+        "temp_mean": 5.4,
+        "temp_min": 4.3,
+        "temp_max": 6.5
+      }
+    },
+    "Tamil Nadu": {
+      "Kharif": {
+        "rain_mean": 445.3,
+        "rain_min": 224.3,
+        "rain_max": 630.6,
+        "temp_mean": 28.3,
+        "temp_min": 27.4,
+        "temp_max": 29.3
+      },
+      "Rabi": {
+        "rain_mean": 254.9,
+        "rain_min": 64.3,
+        "rain_max": 535.0,
+        "temp_mean": 25.5,
+        "temp_min": 24.1,
+        "temp_max": 26.3
+      }
+    },
+    "Telangana": {
+      "Kharif": {
+        "rain_mean": 757.9,
+        "rain_min": 489.9,
+        "rain_max": 1087.5,
+        "temp_mean": 26.0,
+        "temp_min": 25.0,
+        "temp_max": 27.0
+      },
+      "Rabi": {
+        "rain_mean": 57.9,
+        "rain_min": 5.0,
+        "rain_max": 191.8,
+        "temp_mean": 23.6,
+        "temp_min": 21.9,
+        "temp_max": 25.1
+      }
+    },
+    "Tripura": {
+      "Kharif": {
+        "rain_mean": 1524.9,
+        "rain_min": 1326.0,
+        "rain_max": 2142.1,
+        "temp_mean": 27.6,
+        "temp_min": 27.2,
+        "temp_max": 27.9
+      },
+      "Rabi": {
+        "rain_mean": 110.5,
+        "rain_min": 26.1,
+        "rain_max": 322.1,
+        "temp_mean": 21.0,
+        "temp_min": 20.2,
+        "temp_max": 22.0
+      }
+    },
+    "Uttar Pradesh": {
+      "Kharif": {
+        "rain_mean": 869.8,
+        "rain_min": 566.3,
+        "rain_max": 1518.1,
+        "temp_mean": 29.7,
+        "temp_min": 27.9,
+        "temp_max": 31.2
+      },
+      "Rabi": {
+        "rain_mean": 58.3,
+        "rain_min": 6.4,
+        "rain_max": 146.8,
+        "temp_mean": 18.9,
+        "temp_min": 17.5,
+        "temp_max": 20.0
+      },
+      "Zaid": {
+        "rain_mean": 182.7,
+        "rain_min": 36.4,
+        "rain_max": 418.9,
+        "temp_mean": 31.8,
+        "temp_min": 30.9,
+        "temp_max": 33.4
+      }
+    },
+    "Uttarakhand": {
+      "Kharif": {
+        "rain_mean": 1106.1,
+        "rain_min": 682.4,
+        "rain_max": 1669.5,
+        "temp_mean": 25.9,
+        "temp_min": 24.6,
+        "temp_max": 27.1
+      },
+      "Rabi": {
+        "rain_mean": 112.1,
+        "rain_min": 22.2,
+        "rain_max": 225.6,
+        "temp_mean": 15.5,
+        "temp_min": 14.3,
+        "temp_max": 16.4
+      },
+      "Zaid": {
+        "rain_mean": 261.4,
+        "rain_min": 90.7,
+        "rain_max": 602.9,
+        "temp_mean": 26.7,
+        "temp_min": 25.7,
+        "temp_max": 27.5
+      }
+    },
+    "West Bengal": {
+      "Kharif": {
+        "rain_mean": 1149.7,
+        "rain_min": 882.1,
+        "rain_max": 1677.4,
+        "temp_mean": 28.0,
+        "temp_min": 27.5,
+        "temp_max": 28.6
+      },
+      "Rabi": {
+        "rain_mean": 83.4,
+        "rain_min": 11.0,
+        "rain_max": 241.7,
+        "temp_mean": 20.8,
+        "temp_min": 19.8,
+        "temp_max": 21.8
+      },
+      "Zaid": {
+        "rain_mean": 436.7,
+        "rain_min": 265.2,
+        "rain_max": 658.2,
+        "temp_mean": 30.2,
+        "temp_min": 29.2,
+        "temp_max": 30.9
+      }
+    }
+  },
+  "avg_yield": {
+    "Andhra Pradesh": {
+      "Arhar/Tur": {
+        "Kharif": 0.4952,
+        "Rabi": 0.5385
+      },
+      "Bajra": {
+        "Kharif": 1.2877,
+        "Rabi": 1.344
+      },
+      "Castor seed": {
+        "Kharif": 0.487
+      },
+      "Cowpea(Lobia)": {
+        "Kharif": 0.3643,
+        "Rabi": 0.8397
+      },
+      "Dry chillies": {
+        "Kharif": 3.3225,
+        "Rabi": 2.6217
+      },
+      "Gram": {
+        "Rabi": 1.3232
+      },
+      "Groundnut": {
+        "Kharif": 1.0684,
+        "Rabi": 1.9946
+      },
+      "Horse-gram": {
+        "Kharif": 0.488,
+        "Rabi": 0.464
+      },
+      "Jowar": {
+        "Kharif": 1.2022,
+        "Rabi": 1.26
+      },
+      "Linseed": {
+        "Rabi": 0.251
+      },
+      "Maize": {
+        "Kharif": 3.0272,
+        "Rabi": 5.6413
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.4688,
+        "Rabi": 0.4567
+      },
+      "Niger seed": {
+        "Kharif": 0.4085
+      },
+      "Onion": {
+        "Kharif": 15.9242,
+        "Rabi": 18.3867
+      },
+      "Ragi": {
+        "Kharif": 1.1269,
+        "Rabi": 1.6254
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.3019
+      },
+      "Rice": {
+        "Kharif": 2.6794,
+        "Rabi": 3.0051
+      },
+      "Safflower": {
+        "Rabi": 0.3696
+      },
+      "Sesamum": {
+        "Kharif": 0.2273,
+        "Rabi": 0.2659
+      },
+      "Small millets": {
+        "Kharif": 0.6394,
+        "Rabi": 0.7465
+      },
+      "Soyabean": {
+        "Kharif": 1.337
+      },
+      "Sugarcane": {
+        "Kharif": 82.2682
+      },
+      "Sunflower": {
+        "Kharif": 0.8228,
+        "Rabi": 0.8485
+      },
+      "Sweet potato": {
+        "Rabi": 9.8576
+      },
+      "Tobacco": {
+        "Kharif": 2.1464,
+        "Rabi": 2.6169
+      },
+      "Turmeric": {
+        "Kharif": 6.3605
+      },
+      "Urad": {
+        "Kharif": 0.4745,
+        "Rabi": 0.5929
+      },
+      "Wheat": {
+        "Rabi": 0.7432
+      }
+    },
+    "Arunachal Pradesh": {
+      "Groundnut": {
+        "Rabi": 0.8119
+      },
+      "Maize": {
+        "Kharif": 1.5099
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.9648
+      },
+      "Rice": {
+        "Kharif": 1.1813
+      },
+      "Sesamum": {
+        "Kharif": 0.6221
+      },
+      "Small millets": {
+        "Kharif": 0.9632
+      },
+      "Soyabean": {
+        "Kharif": 1.4207
+      },
+      "Sunflower": {
+        "Kharif": 0.4835
+      },
+      "Wheat": {
+        "Rabi": 1.5843
+      }
+    },
+    "Assam": {
+      "Arhar/Tur": {
+        "Kharif": 0.7461
+      },
+      "Banana": {
+        "Rabi": 13.7667
+      },
+      "Castor seed": {
+        "Kharif": 0.4654
+      },
+      "Dry chillies": {
+        "Rabi": 0.7413
+      },
+      "Gram": {
+        "Rabi": 0.5137
+      },
+      "Linseed": {
+        "Rabi": 0.521
+      },
+      "Maize": {
+        "Kharif": 0.9596
+      },
+      "Masoor": {
+        "Rabi": 0.5426
+      },
+      "Moong(Green Gram)": {
+        "Rabi": 0.4875
+      },
+      "Niger seed": {
+        "Kharif": 0.5415
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 0.654
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.5203
+      },
+      "Rice": {
+        "Zaid": 2.0095
+      },
+      "Sesamum": {
+        "Kharif": 0.5297
+      },
+      "Small millets": {
+        "Kharif": 0.5175
+      },
+      "Sugarcane": {
+        "Kharif": 41.8977
+      },
+      "Sweet potato": {
+        "Rabi": 4.7455
+      },
+      "Tapioca": {
+        "Kharif": 8.4395
+      },
+      "Tobacco": {
+        "Kharif": 0.6326
+      },
+      "Urad": {
+        "Rabi": 0.5509
+      },
+      "Wheat": {
+        "Rabi": 1.1536
+      }
+    },
+    "Bihar": {
+      "Arhar/Tur": {
+        "Kharif": 1.3028
+      },
+      "Bajra": {
+        "Kharif": 0.9256
+      },
+      "Barley": {
+        "Rabi": 1.1778
+      },
+      "Castor seed": {
+        "Kharif": 0.9329
+      },
+      "Dry ginger": {
+        "Kharif": 1.4334
+      },
+      "Gram": {
+        "Rabi": 0.9665
+      },
+      "Groundnut": {
+        "Kharif": 0.8057
+      },
+      "Horse-gram": {
+        "Kharif": 0.8557
+      },
+      "Jowar": {
+        "Kharif": 1.0737
+      },
+      "Khesari": {
+        "Rabi": 0.8476
+      },
+      "Linseed": {
+        "Rabi": 0.7796
+      },
+      "Maize": {
+        "Kharif": 1.5675,
+        "Rabi": 3.08,
+        "Zaid": 3.1508
+      },
+      "Masoor": {
+        "Rabi": 0.8127
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.6126,
+        "Rabi": 0.5725,
+        "Zaid": 0.5975
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 0.9652
+      },
+      "Potato": {
+        "Kharif": 7.5184,
+        "Rabi": 5.2465
+      },
+      "Ragi": {
+        "Kharif": 0.9391
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.9318
+      },
+      "Rice": {
+        "Kharif": 1.4224,
+        "Zaid": 1.6432
+      },
+      "Safflower": {
+        "Rabi": 0.7485
+      },
+      "Sesamum": {
+        "Kharif": 0.7526
+      },
+      "Small millets": {
+        "Kharif": 0.7513
+      },
+      "Sunflower": {
+        "Kharif": 1.2236,
+        "Rabi": 1.3398
+      },
+      "Sweet potato": {
+        "Kharif": 13.8304
+      },
+      "Urad": {
+        "Kharif": 0.8054
+      },
+      "Wheat": {
+        "Rabi": 2.0769
+      }
+    },
+    "Chhattisgarh": {
+      "Arhar/Tur": {
+        "Kharif": 0.4962
+      },
+      "Bajra": {
+        "Kharif": 0.5286
+      },
+      "Barley": {
+        "Rabi": 0.8595
+      },
+      "Castor seed": {
+        "Kharif": 0.3382
+      },
+      "Gram": {
+        "Rabi": 0.8584
+      },
+      "Groundnut": {
+        "Kharif": 1.2862
+      },
+      "Horse-gram": {
+        "Kharif": 0.3087,
+        "Rabi": 0.3133
+      },
+      "Jowar": {
+        "Kharif": 0.9559
+      },
+      "Khesari": {
+        "Rabi": 0.5679
+      },
+      "Linseed": {
+        "Rabi": 0.3259
+      },
+      "Maize": {
+        "Kharif": 1.4649
+      },
+      "Masoor": {
+        "Rabi": 0.32
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.2593,
+        "Rabi": 0.2524
+      },
+      "Niger seed": {
+        "Kharif": 0.1883
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 0.3418
+      },
+      "Potato": {
+        "Kharif": 6.399,
+        "Rabi": 5.8766
+      },
+      "Ragi": {
+        "Kharif": 0.2635
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.4144
+      },
+      "Rice": {
+        "Kharif": 1.4313
+      },
+      "Safflower": {
+        "Rabi": 0.2804
+      },
+      "Sesamum": {
+        "Kharif": 0.3221
+      },
+      "Small millets": {
+        "Kharif": 0.2173
+      },
+      "Soyabean": {
+        "Kharif": 0.9956
+      },
+      "Sunflower": {
+        "Kharif": 0.4209
+      },
+      "Urad": {
+        "Kharif": 0.3076,
+        "Rabi": 0.2602
+      },
+      "Wheat": {
+        "Rabi": 1.3408
+      }
+    },
+    "Goa": {
+      "Ragi": {
+        "Kharif": 0.9817
+      },
+      "Rice": {
+        "Kharif": 2.5245
+      }
+    },
+    "Gujarat": {
+      "Arhar/Tur": {
+        "Kharif": 0.8951
+      },
+      "Bajra": {
+        "Kharif": 1.1253,
+        "Zaid": 2.2299
+      },
+      "Castor seed": {
+        "Kharif": 1.7949
+      },
+      "Gram": {
+        "Rabi": 0.9057
+      },
+      "Groundnut": {
+        "Kharif": 1.2321,
+        "Zaid": 1.6678
+      },
+      "Jowar": {
+        "Kharif": 1.059,
+        "Rabi": 0.9279
+      },
+      "Maize": {
+        "Kharif": 1.4167,
+        "Rabi": 1.9325,
+        "Zaid": 1.942
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.4638,
+        "Zaid": 0.5924
+      },
+      "Moth": {
+        "Kharif": 0.4812
+      },
+      "Onion": {
+        "Rabi": 25.1544
+      },
+      "Ragi": {
+        "Kharif": 0.9356
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 1.3627
+      },
+      "Rice": {
+        "Kharif": 1.6647,
+        "Zaid": 3.0091
+      },
+      "Sesamum": {
+        "Kharif": 0.4193,
+        "Zaid": 0.5469
+      },
+      "Small millets": {
+        "Kharif": 0.3639,
+        "Rabi": 0.4363
+      },
+      "Soyabean": {
+        "Kharif": 0.8016
+      },
+      "Tobacco": {
+        "Kharif": 1.6518,
+        "Rabi": 1.663
+      },
+      "Urad": {
+        "Kharif": 0.5954
+      },
+      "Wheat": {
+        "Rabi": 2.6303
+      }
+    },
+    "Haryana": {
+      "Arhar/Tur": {
+        "Kharif": 1.0447
+      },
+      "Bajra": {
+        "Kharif": 1.5902
+      },
+      "Barley": {
+        "Rabi": 2.899
+      },
+      "Castor seed": {
+        "Kharif": 0.7613
+      },
+      "Gram": {
+        "Rabi": 0.982
+      },
+      "Groundnut": {
+        "Kharif": 0.9978
+      },
+      "Jowar": {
+        "Kharif": 0.4287
+      },
+      "Maize": {
+        "Kharif": 2.8458
+      },
+      "Masoor": {
+        "Rabi": 0.9911
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.4097
+      },
+      "Moth": {
+        "Kharif": 0.2701
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 1.3678
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 1.3569
+      },
+      "Rice": {
+        "Kharif": 2.7093
+      },
+      "Sesamum": {
+        "Kharif": 0.4607
+      },
+      "Sunflower": {
+        "Rabi": 1.5079
+      },
+      "Urad": {
+        "Kharif": 0.4038
+      },
+      "Wheat": {
+        "Rabi": 4.0074
+      }
+    },
+    "Himachal Pradesh": {
+      "Arhar/Tur": {
+        "Kharif": 0.3427
+      },
+      "Bajra": {
+        "Kharif": 0.5877
+      },
+      "Barley": {
+        "Rabi": 1.2163
+      },
+      "Coriander": {
+        "Rabi": 0.2851
+      },
+      "Dry chillies": {
+        "Kharif": 0.3395
+      },
+      "Dry ginger": {
+        "Kharif": 7.3045
+      },
+      "Garlic": {
+        "Rabi": 0.9239
+      },
+      "Gram": {
+        "Rabi": 0.6973
+      },
+      "Groundnut": {
+        "Kharif": 0.7071
+      },
+      "Horse-gram": {
+        "Kharif": 0.3991
+      },
+      "Linseed": {
+        "Rabi": 0.2313
+      },
+      "Maize": {
+        "Kharif": 2.2347
+      },
+      "Masoor": {
+        "Kharif": 0.5104,
+        "Rabi": 0.5414
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.4179
+      },
+      "Onion": {
+        "Rabi": 7.3746
+      },
+      "Peas & beans (Pulses)": {
+        "Kharif": 1.5191,
+        "Rabi": 1.5746
+      },
+      "Potato": {
+        "Kharif": 9.7303,
+        "Rabi": 7.885
+      },
+      "Ragi": {
+        "Kharif": 0.9467
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.5324
+      },
+      "Rice": {
+        "Kharif": 1.5407
+      },
+      "Sesamum": {
+        "Kharif": 0.353
+      },
+      "Small millets": {
+        "Kharif": 0.5134
+      },
+      "Soyabean": {
+        "Kharif": 1.3723
+      },
+      "Turmeric": {
+        "Kharif": 0.5315
+      },
+      "Urad": {
+        "Kharif": 0.39
+      },
+      "Wheat": {
+        "Rabi": 1.4258
+      }
+    },
+    "Jammu and Kashmir": {
+      "Bajra": {
+        "Kharif": 0.5811
+      },
+      "Barley": {
+        "Rabi": 0.687
+      },
+      "Dry chillies": {
+        "Kharif": 0.8681
+      },
+      "Garlic": {
+        "Rabi": 0.8292
+      },
+      "Gram": {
+        "Rabi": 0.5378
+      },
+      "Linseed": {
+        "Rabi": 0.5708
+      },
+      "Maize": {
+        "Kharif": 1.3586
+      },
+      "Masoor": {
+        "Rabi": 0.466
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.4969
+      },
+      "Onion": {
+        "Rabi": 2.2794
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 0.8059
+      },
+      "Potato": {
+        "Kharif": 6.3958,
+        "Rabi": 10.5945
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.618
+      },
+      "Rice": {
+        "Kharif": 1.5313
+      },
+      "Sesamum": {
+        "Kharif": 0.4289
+      },
+      "Urad": {
+        "Kharif": 0.463
+      },
+      "Wheat": {
+        "Rabi": 1.2784
+      }
+    },
+    "Jharkhand": {
+      "Arhar/Tur": {
+        "Rabi": 1.4061
+      },
+      "Gram": {
+        "Rabi": 0.7942
+      },
+      "Masoor": {
+        "Rabi": 0.5983
+      },
+      "Onion": {
+        "Rabi": 6.8099
+      },
+      "Potato": {
+        "Rabi": 7.1666
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.7686
+      },
+      "Wheat": {
+        "Rabi": 1.2587
+      }
+    },
+    "Karnataka": {
+      "Arhar/Tur": {
+        "Kharif": 0.5151
+      },
+      "Bajra": {
+        "Kharif": 0.7079,
+        "Rabi": 0.8949,
+        "Zaid": 0.9436
+      },
+      "Castor seed": {
+        "Kharif": 0.8347
+      },
+      "Cowpea(Lobia)": {
+        "Kharif": 0.4711,
+        "Rabi": 0.3468,
+        "Zaid": 0.379
+      },
+      "Dry chillies": {
+        "Kharif": 1.0756,
+        "Rabi": 2.1518,
+        "Zaid": 3.0617
+      },
+      "Dry ginger": {
+        "Kharif": 11.6671
+      },
+      "Gram": {
+        "Kharif": 0.3378,
+        "Rabi": 0.5447
+      },
+      "Groundnut": {
+        "Kharif": 0.686,
+        "Rabi": 1.0812,
+        "Zaid": 0.9317
+      },
+      "Horse-gram": {
+        "Kharif": 0.4854,
+        "Rabi": 0.4253
+      },
+      "Jowar": {
+        "Kharif": 1.2526,
+        "Rabi": 0.7531,
+        "Zaid": 1.8904
+      },
+      "Linseed": {
+        "Rabi": 0.3157
+      },
+      "Maize": {
+        "Kharif": 2.8701,
+        "Rabi": 2.7076,
+        "Zaid": 2.8981
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.2237,
+        "Rabi": 0.2891
+      },
+      "Niger seed": {
+        "Kharif": 0.251
+      },
+      "Onion": {
+        "Kharif": 5.8855,
+        "Rabi": 7.9195,
+        "Zaid": 8.2233
+      },
+      "Peas & beans (Pulses)": {
+        "Kharif": 7.0934,
+        "Rabi": 6.7132,
+        "Zaid": 6.9264
+      },
+      "Potato": {
+        "Kharif": 6.677,
+        "Rabi": 15.0556,
+        "Zaid": 15.8599
+      },
+      "Ragi": {
+        "Kharif": 1.3862,
+        "Rabi": 1.5222,
+        "Zaid": 1.8071
+      },
+      "Rapeseed &Mustard": {
+        "Kharif": 0.2658,
+        "Rabi": 0.2635
+      },
+      "Rice": {
+        "Kharif": 2.4375,
+        "Rabi": 2.3504,
+        "Zaid": 2.8949
+      },
+      "Safflower": {
+        "Rabi": 0.6641
+      },
+      "Sesamum": {
+        "Kharif": 0.473
+      },
+      "Small millets": {
+        "Kharif": 0.528
+      },
+      "Soyabean": {
+        "Kharif": 0.8091
+      },
+      "Sunflower": {
+        "Kharif": 0.4932,
+        "Rabi": 0.5747,
+        "Zaid": 0.825
+      },
+      "Urad": {
+        "Kharif": 0.2855,
+        "Rabi": 0.4195
+      },
+      "Wheat": {
+        "Rabi": 0.8903
+      }
+    },
+    "Kerala": {
+      "Jowar": {
+        "Kharif": 0.6018
+      },
+      "Ragi": {
+        "Kharif": 0.8253
+      },
+      "Rice": {
+        "Zaid": 2.3792
+      },
+      "Sesamum": {
+        "Kharif": 0.3504
+      }
+    },
+    "Madhya Pradesh": {
+      "Arhar/Tur": {
+        "Kharif": 0.6561
+      },
+      "Bajra": {
+        "Kharif": 1.0073
+      },
+      "Barley": {
+        "Kharif": 1.9108,
+        "Rabi": 1.4794
+      },
+      "Castor seed": {
+        "Kharif": 0.369
+      },
+      "Cowpea(Lobia)": {
+        "Kharif": 0.2853,
+        "Rabi": 0.3068
+      },
+      "Dry ginger": {
+        "Kharif": 1.0979
+      },
+      "Gram": {
+        "Rabi": 0.8766
+      },
+      "Groundnut": {
+        "Kharif": 1.0919
+      },
+      "Horse-gram": {
+        "Kharif": 0.3091,
+        "Rabi": 0.3002
+      },
+      "Jowar": {
+        "Kharif": 1.1565,
+        "Rabi": 1.4345
+      },
+      "Khesari": {
+        "Rabi": 0.6618
+      },
+      "Linseed": {
+        "Rabi": 0.54
+      },
+      "Maize": {
+        "Kharif": 1.4646
+      },
+      "Masoor": {
+        "Rabi": 0.475
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.3416,
+        "Rabi": 0.3091
+      },
+      "Niger seed": {
+        "Kharif": 0.2442
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 0.4873
+      },
+      "Ragi": {
+        "Kharif": 0.2724
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.7288
+      },
+      "Rice": {
+        "Kharif": 0.9809
+      },
+      "Safflower": {
+        "Rabi": 0.3148
+      },
+      "Sesamum": {
+        "Kharif": 0.342
+      },
+      "Small millets": {
+        "Kharif": 0.3148
+      },
+      "Soyabean": {
+        "Kharif": 0.899
+      },
+      "Sunflower": {
+        "Kharif": 0.3593
+      },
+      "Urad": {
+        "Kharif": 0.3521,
+        "Rabi": 0.2872
+      },
+      "Wheat": {
+        "Rabi": 1.8833
+      }
+    },
+    "Maharashtra": {
+      "Arhar/Tur": {
+        "Kharif": 0.6213
+      },
+      "Bajra": {
+        "Kharif": 0.668
+      },
+      "Castor seed": {
+        "Kharif": 0.3547
+      },
+      "Gram": {
+        "Kharif": 0.4086,
+        "Rabi": 0.6763
+      },
+      "Groundnut": {
+        "Kharif": 0.7955,
+        "Zaid": 1.4286
+      },
+      "Jowar": {
+        "Kharif": 1.192,
+        "Rabi": 0.7334
+      },
+      "Linseed": {
+        "Rabi": 0.3026
+      },
+      "Maize": {
+        "Kharif": 1.7962,
+        "Rabi": 1.9558,
+        "Zaid": 1.3304
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.5111
+      },
+      "Niger seed": {
+        "Kharif": 0.3109
+      },
+      "Ragi": {
+        "Kharif": 1.0177
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.3883
+      },
+      "Rice": {
+        "Kharif": 1.2161,
+        "Zaid": 2.2271
+      },
+      "Safflower": {
+        "Rabi": 0.5446
+      },
+      "Sesamum": {
+        "Kharif": 0.3286,
+        "Rabi": 0.3861
+      },
+      "Small millets": {
+        "Kharif": 0.636,
+        "Rabi": 0.5156
+      },
+      "Soyabean": {
+        "Kharif": 1.2436,
+        "Rabi": 1.14
+      },
+      "Sugarcane": {
+        "Kharif": 69.8045
+      },
+      "Sunflower": {
+        "Kharif": 0.5005,
+        "Rabi": 0.573,
+        "Zaid": 0.8686
+      },
+      "Urad": {
+        "Kharif": 0.5548
+      },
+      "Wheat": {
+        "Rabi": 1.3697
+      }
+    },
+    "Manipur": {
+      "Dry ginger": {
+        "Kharif": 1.6754
+      },
+      "Maize": {
+        "Kharif": 2.5024
+      },
+      "Peas & beans (Pulses)": {
+        "Kharif": 0.5256
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.481
+      },
+      "Rice": {
+        "Kharif": 2.2298
+      },
+      "Sesamum": {
+        "Kharif": 0.5185
+      },
+      "Soyabean": {
+        "Kharif": 1.0915
+      }
+    },
+    "Meghalaya": {
+      "Arhar/Tur": {
+        "Kharif": 0.8687
+      },
+      "Banana": {
+        "Kharif": 10.2933
+      },
+      "Castor seed": {
+        "Kharif": 0.6948
+      },
+      "Dry ginger": {
+        "Kharif": 7.0318
+      },
+      "Gram": {
+        "Rabi": 0.6925
+      },
+      "Maize": {
+        "Kharif": 1.5043
+      },
+      "Masoor": {
+        "Rabi": 0.9887
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 1.5424
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.6828
+      },
+      "Rice": {
+        "Kharif": 1.6418,
+        "Rabi": 1.9752,
+        "Zaid": 2.1327
+      },
+      "Sesamum": {
+        "Kharif": 0.6264
+      },
+      "Small millets": {
+        "Kharif": 0.9229,
+        "Rabi": 1.0045
+      },
+      "Soyabean": {
+        "Kharif": 1.0397
+      },
+      "Sweet potato": {
+        "Kharif": 3.6096
+      },
+      "Tapioca": {
+        "Kharif": 6.5259
+      },
+      "Tobacco": {
+        "Rabi": 0.8218
+      },
+      "Wheat": {
+        "Rabi": 1.3649
+      }
+    },
+    "Mizoram": {
+      "Arhar/Tur": {
+        "Kharif": 0.9659
+      },
+      "Maize": {
+        "Kharif": 1.6269,
+        "Rabi": 1.9323
+      },
+      "Potato": {
+        "Kharif": 4.496
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.783
+      },
+      "Rice": {
+        "Kharif": 1.3328
+      },
+      "Sesamum": {
+        "Kharif": 0.6116
+      },
+      "Soyabean": {
+        "Kharif": 1.1195
+      },
+      "Tapioca": {
+        "Kharif": 6.2378
+      }
+    },
+    "Nagaland": {
+      "Arhar/Tur": {
+        "Kharif": 0.9128
+      },
+      "Bajra": {
+        "Kharif": 0.9919
+      },
+      "Barley": {
+        "Rabi": 1.4909
+      },
+      "Castor seed": {
+        "Kharif": 0.6237
+      },
+      "Dry ginger": {
+        "Kharif": 8.5728
+      },
+      "Gram": {
+        "Rabi": 0.8706
+      },
+      "Groundnut": {
+        "Kharif": 1.0588
+      },
+      "Horse-gram": {
+        "Kharif": 0.9525
+      },
+      "Jowar": {
+        "Kharif": 1.0715
+      },
+      "Linseed": {
+        "Rabi": 0.7141
+      },
+      "Maize": {
+        "Kharif": 1.7216,
+        "Rabi": 1.8924
+      },
+      "Masoor": {
+        "Rabi": 0.767
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.8646
+      },
+      "Peas & beans (Pulses)": {
+        "Kharif": 1.1554,
+        "Rabi": 1.0606
+      },
+      "Potato": {
+        "Kharif": 11.7206,
+        "Rabi": 10.6496
+      },
+      "Ragi": {
+        "Kharif": 0.912
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.9054
+      },
+      "Rice": {
+        "Kharif": 1.7676,
+        "Rabi": 2.1344
+      },
+      "Sesamum": {
+        "Kharif": 0.6314
+      },
+      "Small millets": {
+        "Kharif": 0.9064
+      },
+      "Soyabean": {
+        "Kharif": 1.285
+      },
+      "Sugarcane": {
+        "Kharif": 42.3414
+      },
+      "Sunflower": {
+        "Kharif": 0.9641,
+        "Rabi": 0.9413
+      },
+      "Sweet potato": {
+        "Kharif": 8.4911
+      },
+      "Tapioca": {
+        "Kharif": 20.5205
+      },
+      "Urad": {
+        "Kharif": 0.8687,
+        "Rabi": 0.6807
+      },
+      "Wheat": {
+        "Rabi": 1.6888
+      }
+    },
+    "Odisha": {
+      "Arhar/Tur": {
+        "Kharif": 0.6638,
+        "Zaid": 0.2164
+      },
+      "Bajra": {
+        "Kharif": 0.5426
+      },
+      "Castor seed": {
+        "Kharif": 0.4977,
+        "Rabi": 0.4998
+      },
+      "Coriander": {
+        "Rabi": 0.4395
+      },
+      "Dry chillies": {
+        "Kharif": 0.8321,
+        "Rabi": 0.8272
+      },
+      "Dry ginger": {
+        "Kharif": 1.8658
+      },
+      "Garlic": {
+        "Rabi": 2.9417
+      },
+      "Gram": {
+        "Rabi": 0.5147
+      },
+      "Groundnut": {
+        "Kharif": 0.9784,
+        "Rabi": 1.5191,
+        "Zaid": 1.2551
+      },
+      "Horse-gram": {
+        "Kharif": 0.2621,
+        "Rabi": 0.3311,
+        "Zaid": 0.2537
+      },
+      "Jowar": {
+        "Kharif": 0.5788
+      },
+      "Linseed": {
+        "Rabi": 0.3554
+      },
+      "Maize": {
+        "Kharif": 0.921,
+        "Rabi": 1.3928,
+        "Zaid": 1.6109
+      },
+      "Masoor": {
+        "Rabi": 0.3868
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.2445,
+        "Rabi": 0.3714,
+        "Zaid": 0.3106
+      },
+      "Niger seed": {
+        "Kharif": 0.3106,
+        "Rabi": 0.3567
+      },
+      "Ragi": {
+        "Kharif": 0.484,
+        "Zaid": 0.7082
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.1838
+      },
+      "Rice": {
+        "Kharif": 1.2848,
+        "Zaid": 2.0068
+      },
+      "Safflower": {
+        "Rabi": 0.4908
+      },
+      "Sesamum": {
+        "Kharif": 0.2368,
+        "Rabi": 0.3731,
+        "Zaid": 0.2944
+      },
+      "Small millets": {
+        "Kharif": 0.4239
+      },
+      "Sunflower": {
+        "Kharif": 0.5888,
+        "Rabi": 0.6537
+      },
+      "Sweet potato": {
+        "Kharif": 8.4304
+      },
+      "Turmeric": {
+        "Kharif": 1.9832
+      },
+      "Urad": {
+        "Kharif": 0.2633,
+        "Rabi": 0.366,
+        "Zaid": 0.3215
+      },
+      "Wheat": {
+        "Rabi": 1.1931,
+        "Zaid": 1.3505
+      }
+    },
+    "Puducherry": {
+      "Banana": {
+        "Kharif": 22.0462
+      },
+      "Moong(Green Gram)": {
+        "Rabi": 0.5301,
+        "Zaid": 0.4966
+      },
+      "Ragi": {
+        "Kharif": 1.8742
+      },
+      "Rice": {
+        "Kharif": 2.7587,
+        "Rabi": 2.7616,
+        "Zaid": 2.5274
+      },
+      "Urad": {
+        "Rabi": 0.6195,
+        "Zaid": 0.555
+      }
+    },
+    "Punjab": {
+      "Arhar/Tur": {
+        "Kharif": 0.9128
+      },
+      "Bajra": {
+        "Kharif": 0.9921
+      },
+      "Barley": {
+        "Rabi": 3.3465
+      },
+      "Gram": {
+        "Rabi": 0.9599
+      },
+      "Groundnut": {
+        "Kharif": 0.9962
+      },
+      "Guar seed": {
+        "Kharif": 0.9149
+      },
+      "Maize": {
+        "Kharif": 3.1863
+      },
+      "Masoor": {
+        "Rabi": 0.708
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.78
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 1.1008
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 1.1557
+      },
+      "Rice": {
+        "Kharif": 3.6306
+      },
+      "Sesamum": {
+        "Kharif": 0.3913
+      },
+      "Urad": {
+        "Kharif": 0.5696
+      },
+      "Wheat": {
+        "Rabi": 4.2855
+      }
+    },
+    "Rajasthan": {
+      "Arhar/Tur": {
+        "Kharif": 0.7122
+      },
+      "Bajra": {
+        "Kharif": 0.7838
+      },
+      "Barley": {
+        "Rabi": 2.2104
+      },
+      "Castor seed": {
+        "Kharif": 0.8199
+      },
+      "Dry ginger": {
+        "Kharif": 2.8079
+      },
+      "Gram": {
+        "Rabi": 0.8303
+      },
+      "Groundnut": {
+        "Kharif": 1.2156
+      },
+      "Jowar": {
+        "Kharif": 0.5587
+      },
+      "Linseed": {
+        "Rabi": 0.72
+      },
+      "Maize": {
+        "Kharif": 1.27
+      },
+      "Masoor": {
+        "Rabi": 0.9369
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.2884
+      },
+      "Moth": {
+        "Kharif": 0.2297
+      },
+      "Onion": {
+        "Kharif": 4.2844
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 1.64
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 1.0384
+      },
+      "Rice": {
+        "Kharif": 1.4601
+      },
+      "Sesamum": {
+        "Kharif": 0.2724
+      },
+      "Small millets": {
+        "Kharif": 0.4399,
+        "Rabi": 0.8731
+      },
+      "Soyabean": {
+        "Kharif": 1.1471
+      },
+      "Sugarcane": {
+        "Kharif": 58.9381
+      },
+      "Sunflower": {
+        "Kharif": 0.7567
+      },
+      "Urad": {
+        "Kharif": 0.3738
+      },
+      "Wheat": {
+        "Rabi": 2.5722
+      }
+    },
+    "Sikkim": {
+      "Barley": {
+        "Rabi": 1.0621
+      },
+      "Maize": {
+        "Kharif": 1.5661
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.7243
+      },
+      "Rice": {
+        "Kharif": 1.5739
+      },
+      "Small millets": {
+        "Kharif": 0.9198
+      },
+      "Soyabean": {
+        "Kharif": 0.84
+      },
+      "Urad": {
+        "Kharif": 0.7452
+      },
+      "Wheat": {
+        "Rabi": 1.1602
+      }
+    },
+    "Tamil Nadu": {
+      "Arhar/Tur": {
+        "Kharif": 0.6645
+      },
+      "Bajra": {
+        "Kharif": 1.5441,
+        "Rabi": 2.3186
+      },
+      "Banana": {
+        "Kharif": 29.6009
+      },
+      "Castor seed": {
+        "Kharif": 0.3702
+      },
+      "Dry ginger": {
+        "Kharif": 22.5228
+      },
+      "Gram": {
+        "Rabi": 0.5749
+      },
+      "Groundnut": {
+        "Kharif": 1.8442,
+        "Rabi": 2.3767
+      },
+      "Horse-gram": {
+        "Kharif": 0.4152,
+        "Rabi": 0.6889
+      },
+      "Jowar": {
+        "Kharif": 1.0152,
+        "Rabi": 1.8077
+      },
+      "Maize": {
+        "Kharif": 3.0115,
+        "Rabi": 5.7713
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.4444,
+        "Rabi": 0.7545
+      },
+      "Onion": {
+        "Kharif": 9.764,
+        "Rabi": 8.3047
+      },
+      "Ragi": {
+        "Kharif": 1.9956
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.2601
+      },
+      "Rice": {
+        "Kharif": 3.2498
+      },
+      "Sesamum": {
+        "Kharif": 0.4432
+      },
+      "Small millets": {
+        "Kharif": 0.812
+      },
+      "Sunflower": {
+        "Kharif": 1.1714,
+        "Rabi": 1.0883
+      },
+      "Urad": {
+        "Kharif": 0.4911,
+        "Rabi": 0.7779
+      }
+    },
+    "Telangana": {
+      "Arhar/Tur": {
+        "Kharif": 0.457,
+        "Rabi": 0.4331
+      },
+      "Bajra": {
+        "Kharif": 0.5786,
+        "Rabi": 0.6221
+      },
+      "Castor seed": {
+        "Kharif": 0.3968
+      },
+      "Cowpea(Lobia)": {
+        "Kharif": 0.5523,
+        "Rabi": 0.8396
+      },
+      "Dry chillies": {
+        "Kharif": 2.2228,
+        "Rabi": 3.1203
+      },
+      "Gram": {
+        "Rabi": 1.0558
+      },
+      "Groundnut": {
+        "Kharif": 0.8868,
+        "Rabi": 1.5199
+      },
+      "Horse-gram": {
+        "Kharif": 0.411,
+        "Rabi": 0.3122
+      },
+      "Jowar": {
+        "Kharif": 0.9159,
+        "Rabi": 0.8016
+      },
+      "Linseed": {
+        "Rabi": 0.2391
+      },
+      "Maize": {
+        "Kharif": 3.0711,
+        "Rabi": 4.3568
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.4072,
+        "Rabi": 0.5253
+      },
+      "Onion": {
+        "Kharif": 12.7421,
+        "Rabi": 24.1877
+      },
+      "Ragi": {
+        "Kharif": 1.2443,
+        "Rabi": 1.6712
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.5526
+      },
+      "Rice": {
+        "Kharif": 2.6614,
+        "Rabi": 2.8333
+      },
+      "Safflower": {
+        "Rabi": 0.4914
+      },
+      "Sesamum": {
+        "Kharif": 0.2042,
+        "Rabi": 0.2888
+      },
+      "Small millets": {
+        "Kharif": 0.5592
+      },
+      "Soyabean": {
+        "Kharif": 1.4305
+      },
+      "Sugarcane": {
+        "Kharif": 80.2558
+      },
+      "Sunflower": {
+        "Kharif": 0.8247,
+        "Rabi": 0.8935
+      },
+      "Urad": {
+        "Kharif": 0.5165,
+        "Rabi": 0.5435
+      },
+      "Wheat": {
+        "Rabi": 0.8585
+      }
+    },
+    "Tripura": {
+      "Arhar/Tur": {
+        "Kharif": 0.7248
+      },
+      "Gram": {
+        "Rabi": 0.7819
+      },
+      "Groundnut": {
+        "Kharif": 1.0969,
+        "Rabi": 1.1114
+      },
+      "Maize": {
+        "Kharif": 1.0991
+      },
+      "Masoor": {
+        "Rabi": 0.6735
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.5271,
+        "Rabi": 0.5657
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 0.7586
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.7803
+      },
+      "Rice": {
+        "Kharif": 2.4759
+      },
+      "Sesamum": {
+        "Kharif": 0.5452
+      },
+      "Urad": {
+        "Kharif": 0.5775,
+        "Rabi": 0.6392
+      },
+      "Wheat": {
+        "Rabi": 2.0353
+      }
+    },
+    "Uttar Pradesh": {
+      "Arhar/Tur": {
+        "Kharif": 0.8991
+      },
+      "Bajra": {
+        "Kharif": 1.3497
+      },
+      "Banana": {
+        "Zaid": 42.6009
+      },
+      "Barley": {
+        "Rabi": 2.1828
+      },
+      "Castor seed": {
+        "Kharif": 0.729
+      },
+      "Coriander": {
+        "Rabi": 0.5627
+      },
+      "Dry chillies": {
+        "Kharif": 0.8775
+      },
+      "Dry ginger": {
+        "Kharif": 3.2444
+      },
+      "Garlic": {
+        "Rabi": 5.3968
+      },
+      "Gram": {
+        "Rabi": 0.9299
+      },
+      "Groundnut": {
+        "Kharif": 0.8524
+      },
+      "Guar seed": {
+        "Kharif": 0.8312
+      },
+      "Jowar": {
+        "Kharif": 0.9771
+      },
+      "Linseed": {
+        "Rabi": 0.429
+      },
+      "Maize": {
+        "Kharif": 1.4174,
+        "Rabi": 2.3039,
+        "Zaid": 1.5234
+      },
+      "Masoor": {
+        "Rabi": 0.798
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.341,
+        "Rabi": 0.5077,
+        "Zaid": 0.6503
+      },
+      "Moth": {
+        "Kharif": 0.4583
+      },
+      "Onion": {
+        "Kharif": 10.2179,
+        "Rabi": 17.0388,
+        "Zaid": 12.1585
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 1.2108
+      },
+      "Potato": {
+        "Rabi": 21.198
+      },
+      "Ragi": {
+        "Kharif": 1.2671,
+        "Rabi": 1.5011
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.9051
+      },
+      "Rice": {
+        "Kharif": 2.0544,
+        "Zaid": 2.1642
+      },
+      "Sesamum": {
+        "Kharif": 0.1706
+      },
+      "Small millets": {
+        "Kharif": 0.7088
+      },
+      "Soyabean": {
+        "Kharif": 0.8006
+      },
+      "Sugarcane": {
+        "Kharif": 53.2276
+      },
+      "Sunflower": {
+        "Kharif": 1.511,
+        "Rabi": 1.2737,
+        "Zaid": 1.6488
+      },
+      "Sweet potato": {
+        "Kharif": 12.9971
+      },
+      "Tobacco": {
+        "Rabi": 5.2061,
+        "Zaid": 3.0508
+      },
+      "Turmeric": {
+        "Rabi": 3.0178
+      },
+      "Urad": {
+        "Kharif": 0.5012,
+        "Rabi": 0.4615,
+        "Zaid": 0.5967
+      },
+      "Wheat": {
+        "Rabi": 2.7629
+      }
+    },
+    "Uttarakhand": {
+      "Arhar/Tur": {
+        "Kharif": 0.6947
+      },
+      "Barley": {
+        "Rabi": 1.2175
+      },
+      "Gram": {
+        "Rabi": 0.6586
+      },
+      "Groundnut": {
+        "Kharif": 1.028
+      },
+      "Horse-gram": {
+        "Kharif": 0.6867
+      },
+      "Maize": {
+        "Kharif": 1.3185,
+        "Rabi": 1.5848,
+        "Zaid": 1.8954
+      },
+      "Masoor": {
+        "Rabi": 0.5937
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.5429
+      },
+      "Moth": {
+        "Kharif": 0.43
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 0.6788
+      },
+      "Potato": {
+        "Kharif": 12.0055,
+        "Rabi": 12.9103
+      },
+      "Ragi": {
+        "Kharif": 1.4044
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.5845
+      },
+      "Rice": {
+        "Kharif": 1.6409,
+        "Zaid": 3.273
+      },
+      "Sesamum": {
+        "Kharif": 0.2177
+      },
+      "Small millets": {
+        "Kharif": 1.1459
+      },
+      "Soyabean": {
+        "Kharif": 0.9999
+      },
+      "Sunflower": {
+        "Kharif": 0.9322
+      },
+      "Urad": {
+        "Kharif": 0.5976,
+        "Zaid": 0.5291
+      },
+      "Wheat": {
+        "Rabi": 1.6861
+      }
+    },
+    "West Bengal": {
+      "Arhar/Tur": {
+        "Kharif": 0.837,
+        "Rabi": 0.921
+      },
+      "Bajra": {
+        "Kharif": 0.6043
+      },
+      "Barley": {
+        "Rabi": 1.2478
+      },
+      "Dry chillies": {
+        "Rabi": 1.0651
+      },
+      "Dry ginger": {
+        "Kharif": 1.6667
+      },
+      "Gram": {
+        "Rabi": 0.9213
+      },
+      "Groundnut": {
+        "Kharif": 1.0849,
+        "Rabi": 1.544,
+        "Zaid": 1.6181
+      },
+      "Horse-gram": {
+        "Kharif": 0.5153,
+        "Rabi": 0.4824
+      },
+      "Jowar": {
+        "Kharif": 0.589
+      },
+      "Khesari": {
+        "Rabi": 0.9128
+      },
+      "Linseed": {
+        "Rabi": 0.3197
+      },
+      "Maize": {
+        "Kharif": 2.3147,
+        "Rabi": 3.3738,
+        "Zaid": 2.8946
+      },
+      "Masoor": {
+        "Rabi": 0.6972
+      },
+      "Moong(Green Gram)": {
+        "Kharif": 0.5678,
+        "Rabi": 0.6129,
+        "Zaid": 0.523
+      },
+      "Niger seed": {
+        "Kharif": 0.4742
+      },
+      "Peas & beans (Pulses)": {
+        "Rabi": 0.8945
+      },
+      "Potato": {
+        "Rabi": 25.3528
+      },
+      "Ragi": {
+        "Kharif": 0.8307
+      },
+      "Rapeseed &Mustard": {
+        "Rabi": 0.8085
+      },
+      "Rice": {
+        "Zaid": 2.9607
+      },
+      "Safflower": {
+        "Rabi": 0.728
+      },
+      "Sesamum": {
+        "Zaid": 0.7518
+      },
+      "Small millets": {
+        "Kharif": 0.6848,
+        "Rabi": 1.0515
+      },
+      "Soyabean": {
+        "Kharif": 0.5755
+      },
+      "Sunflower": {
+        "Kharif": 1.1377
+      },
+      "Urad": {
+        "Kharif": 0.5334,
+        "Rabi": 0.6793
+      },
+      "Wheat": {
+        "Rabi": 2.2457
+      }
+    }
+  },
+  "national_avg_yield": {
+    "Arhar/Tur": {
+      "Kharif": 0.7814,
+      "Rabi": 0.8424,
+      "Zaid": 0.2164
+    },
+    "Bajra": {
+      "Kharif": 1.0715,
+      "Rabi": 1.2409,
+      "Zaid": 2.1023
+    },
+    "Banana": {
+      "Kharif": 19.7344,
+      "Rabi": 13.8811,
+      "Zaid": 41.3514
+    },
+    "Barley": {
+      "Kharif": 1.7467,
+      "Rabi": 1.8157
+    },
+    "Castor seed": {
+      "Kharif": 0.686,
+      "Rabi": 0.5388
+    },
+    "Coriander": {
+      "Rabi": 0.5388
+    },
+    "Cowpea(Lobia)": {
+      "Kharif": 0.4506,
+      "Rabi": 0.52,
+      "Zaid": 0.379
+    },
+    "Dry chillies": {
+      "Kharif": 1.447,
+      "Rabi": 2.1303,
+      "Zaid": 2.9617
+    },
+    "Dry ginger": {
+      "Kharif": 4.1404
+    },
+    "Garlic": {
+      "Rabi": 4.6491
+    },
+    "Gram": {
+      "Kharif": 0.5244,
+      "Rabi": 0.8264
+    },
+    "Groundnut": {
+      "Kharif": 1.042,
+      "Rabi": 1.455,
+      "Zaid": 1.4389
+    },
+    "Guar seed": {
+      "Kharif": 0.838
+    },
+    "Horse-gram": {
+      "Kharif": 0.4953,
+      "Rabi": 0.4139,
+      "Zaid": 0.2537
+    },
+    "Jowar": {
+      "Kharif": 0.9987,
+      "Rabi": 0.9451,
+      "Zaid": 1.8911
+    },
+    "Khesari": {
+      "Rabi": 0.7793
+    },
+    "Linseed": {
+      "Rabi": 0.5093
+    },
+    "Maize": {
+      "Kharif": 1.766,
+      "Rabi": 2.8602,
+      "Zaid": 2.2639
+    },
+    "Masoor": {
+      "Kharif": 0.4781,
+      "Rabi": 0.6951
+    },
+    "Moong(Green Gram)": {
+      "Kharif": 0.4262,
+      "Rabi": 0.4374,
+      "Zaid": 0.5558
+    },
+    "Moth": {
+      "Kharif": 0.3701
+    },
+    "Niger seed": {
+      "Kharif": 0.336,
+      "Rabi": 0.3691
+    },
+    "Onion": {
+      "Kharif": 10.0166,
+      "Rabi": 15.5932,
+      "Zaid": 11.3319
+    },
+    "Peas & beans (Pulses)": {
+      "Kharif": 2.0463,
+      "Rabi": 1.0185,
+      "Zaid": 6.4538
+    },
+    "Potato": {
+      "Kharif": 8.6415,
+      "Rabi": 16.3735,
+      "Zaid": 14.5882
+    },
+    "Ragi": {
+      "Kharif": 1.1168,
+      "Rabi": 1.5816,
+      "Zaid": 1.4769
+    },
+    "Rapeseed &Mustard": {
+      "Kharif": 0.3345,
+      "Rabi": 0.7912
+    },
+    "Rice": {
+      "Kharif": 1.9586,
+      "Rabi": 2.6198,
+      "Zaid": 2.2944
+    },
+    "Safflower": {
+      "Rabi": 0.5338
+    },
+    "Sesamum": {
+      "Kharif": 0.3751,
+      "Rabi": 0.3271,
+      "Zaid": 0.4467
+    },
+    "Small millets": {
+      "Kharif": 0.6164,
+      "Rabi": 0.7496
+    },
+    "Soyabean": {
+      "Kharif": 1.0152,
+      "Rabi": 1.2651
+    },
+    "Sugarcane": {
+      "Kharif": 55.7603
+    },
+    "Sunflower": {
+      "Kharif": 0.8185,
+      "Rabi": 0.851,
+      "Zaid": 1.1761
+    },
+    "Sweet potato": {
+      "Kharif": 11.8181,
+      "Rabi": 6.6802
+    },
+    "Tapioca": {
+      "Kharif": 12.4858
+    },
+    "Tobacco": {
+      "Kharif": 1.195,
+      "Rabi": 3.4797,
+      "Zaid": 3.0508
+    },
+    "Turmeric": {
+      "Kharif": 3.2314,
+      "Rabi": 3.0776
+    },
+    "Urad": {
+      "Kharif": 0.4958,
+      "Rabi": 0.4934,
+      "Zaid": 0.5311
+    },
+    "Wheat": {
+      "Rabi": 2.0938,
+      "Zaid": 1.3505
     }
   }
 }
